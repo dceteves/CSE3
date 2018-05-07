@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8fad9342-1f51-4dc9-a3c5-2dc219be6a61" name="Default" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="CYOA.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CYOA.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="273">
+              <caret line="1028" column="0" lean-forward="false" selection-start-line="1028" selection-start-column="0" selection-end-line="1028" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#71#108#0" expanded="false" />
+                <element signature="e#138#176#0" expanded="false" />
+                <element signature="e#211#260#0" expanded="false" />
+                <element signature="e#289#339#0" expanded="false" />
+                <element signature="e#370#420#0" expanded="false" />
+                <element signature="e#450#500#0" expanded="false" />
+                <element signature="e#532#582#0" expanded="false" />
+                <element signature="e#612#662#0" expanded="false" />
+                <element signature="e#694#744#0" expanded="false" />
+                <element signature="e#845#1092#0" expanded="false" />
+                <element signature="e#1312#1579#0" expanded="false" />
+                <element signature="e#1623#2027#0" expanded="false" />
+                <element signature="e#2178#2551#0" expanded="false" />
+                <element signature="e#4005#4789#0" expanded="false" />
+                <element signature="e#5904#6788#0" expanded="false" />
+                <element signature="e#6815#7073#0" expanded="false" />
+                <element signature="e#7101#7427#0" expanded="false" />
+                <element signature="e#7462#7645#0" expanded="false" />
+                <element signature="e#7674#7895#0" expanded="false" />
+                <element signature="e#7926#8075#0" expanded="false" />
+                <element signature="e#8106#8285#0" expanded="false" />
+                <element signature="e#8317#8541#0" expanded="false" />
+                <element signature="e#8571#10420#0" expanded="false" />
+                <element signature="e#10449#10866#0" expanded="false" />
+                <element signature="e#10891#11465#0" expanded="false" />
+                <element signature="e#11494#12132#0" expanded="false" />
+                <element signature="e#12161#12818#0" expanded="false" />
+                <element signature="e#12848#13513#0" expanded="false" />
+                <element signature="e#13538#13715#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>elif 'inv</find>
+      <find>for i, item in enumerate(inventory):</find>
+      <find>for item in</find>
+      <find>isOpen</find>
+      <find>for item</find>
+      <find>for item in inven</find>
+      <find>elif 'open</find>
+      <find>if command ==</find>
+      <find>elif 'close</find>
+      <find>contanier</find>
+      <find>(Container</find>
+      <find>class Container</find>
+      <find>redbold +</find>
+      <find>redbold</find>
+      <find>+ end</find>
+      <find>&quot;Your inventory is full&quot;</find>
+      <find>.take()</find>
+      <find>def take_al</find>
+      <find>bold</find>
+      <find>end</find>
+      <find>blue</find>
+      <find>red</find>
+      <find>green</find>
+      <find>name</find>
+      <find>NAME</find>
+      <find>def print_descrip</find>
+      <find>elif 'take'</find>
+      <find>def take(</find>
+      <find>class Room</find>
+      <find>elif 'play</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>None</replace>
+      <replace>counter</replace>
+      <replace>north</replace>
+      <replace>REDBOLD +</replace>
+      <replace>BLUEBOLD +</replace>
+      <replace>items.Item</replace>
+      <replace>room.Room</replace>
+      <replace>items.head</replace>
+      <replace>items.BLUE</replace>
+      <replace>items.END</replace>
+      <replace>items.RED</replace>
+      <replace>items.REDBOLD</replace>
+      <replace>Room</replace>
+      <replace>green</replace>
+      <replace>play_co</replace>
+      <replace>for item in inventory:</replace>
+      <replace>for item in inventory:`</replace>
+      <replace>if command.strip()</replace>
+      <replace>if command.strip() ==</replace>
+      <replace>red_bold(</replace>
+      <replace>)</replace>
+      <replace>'\033[1m'</replace>
+      <replace>'\033[0m'</replace>
+      <replace>'\033[94m'</replace>
+      <replace>'\033[95m'</replace>
+      <replace>'\033[96m'</replace>
+      <replace>'\033[93m'</replace>
+      <replace>'\033[91m'</replace>
+      <replace>'\033[92m'</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Warmups.py" />
+        <option value="$PROJECT_DIR$/Devin Teves - Guess game.py" />
+        <option value="$PROJECT_DIR$/Devin Teves - Blackjack.py" />
+        <option value="$PROJECT_DIR$/blackjack copy.py" />
+        <option value="$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+        <option value="$PROJECT_DIR$/Function Notes.py" />
+        <option value="$PROJECT_DIR$/Class (object) Notes.py" />
+        <option value="$PROJECT_DIR$/Devin Teves - Dictionary World Map.py" />
+        <option value="$PROJECT_DIR$/object.py" />
+        <option value="$PROJECT_DIR$/Devin Teves - Hangman.py" />
+        <option value="$PROJECT_DIR$/Programmer.py" />
+        <option value="$PROJECT_DIR$/Devin Teves - Programmer.py" />
+        <option value="$PROJECT_DIR$/Room Class.py" />
+        <option value="$PROJECT_DIR$/Character Class.py" />
+        <option value="$PROJECT_DIR$/Item Class.py" />
+        <option value="$PROJECT_DIR$/items.py" />
+        <option value="$PROJECT_DIR$/room.py" />
+        <option value="$PROJECT_DIR$/Devin Teves - World Map OOP.py" />
+        <option value="$PROJECT_DIR$/Notes.py" />
+        <option value="$PROJECT_DIR$/CYOA.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="311" />
+    <option name="y" value="-17" />
+    <option name="width" value="697" />
+    <option name="height" value="788" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Buildout</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="last_opened_file_path" value="C:/Program Files/Python36/python.exe" />
+    <property name="ToolWindowStructure.ShowToolbar" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.CYOA">
+    <configuration name="CYOA" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CSE" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CYOA.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="Devin Teves - Hangman" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CSE" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Devin Teves - Hangman.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="Devin Teves - World Map OOP" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CSE" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Devin Teves - World Map OOP.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="Notes" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CSE" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Notes.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="Programmer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CSE" />
+      <option name="SCRIPT_NAME" value="C:\Users\qf2l\Documents\GitHub\CSE\Devin Teves - Programmer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <list size="5">
+      <item index="0" class="java.lang.String" itemvalue="Python.Notes" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Devin Teves - World Map OOP" />
+      <item index="2" class="java.lang.String" itemvalue="Python.Devin Teves - Hangman" />
+      <item index="3" class="java.lang.String" itemvalue="Python.Programmer" />
+      <item index="4" class="java.lang.String" itemvalue="Python.CYOA" />
+    </list>
+    <recent_temporary>
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Python.CYOA" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Notes" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Devin Teves - World Map OOP" />
+        <item index="3" class="java.lang.String" itemvalue="Python.Programmer" />
+        <item index="4" class="java.lang.String" itemvalue="Python.Devin Teves - Hangman" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",SHOW_FIELDS,SHOW_INHERITED" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8fad9342-1f51-4dc9-a3c5-2dc219be6a61" name="Default" comment="" />
+      <created>1516380760835</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1516380760835</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33308932" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28618422" sideWeight="0.52928257" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28618422" sideWeight="0.47071743" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24816984" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39936608" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24963397" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Devin Teves - Guess game.py</url>
+          <line>13</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Devin Teves - Item Classes.py</url>
+          <line>4</line>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+      <option name="time" value="110" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Blackjack.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+    <entry file="file://$PROJECT_DIR$/Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Hangman.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Hangman.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Hangman.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Hangman.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Hangman.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Hangman.py" />
+    <entry file="file://$PROJECT_DIR$/Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Blackjack.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Blackjack.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Blackjack.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Guess game.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Guess game.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Guess game.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Guess game.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Guess game.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Guess game.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="8" lean-forward="false" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Warmups.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Guess game.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="0" lean-forward="true" selection-start-line="4" selection-start-column="27" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Blackjack.py" />
+    <entry file="file://$PROJECT_DIR$/blackjack copy.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Lucky 7's.py" />
+    <entry file="file://$PROJECT_DIR$/Function Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Class (object) Notes.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Dictionary World Map.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="11" column="25" lean-forward="false" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/object.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Hangman.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-252">
+          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Programmer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="27" column="0" lean-forward="true" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitattributes">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Devin Teves - Item Classes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1783">
+          <caret line="5" column="20" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/character.py" />
+    <entry file="file://$PROJECT_DIR$/items.py" />
+    <entry file="file://$PROJECT_DIR$/room.py" />
+    <entry file="file://$PROJECT_DIR$/Devin Teves - World Map OOP.py" />
+    <entry file="file://$PROJECT_DIR$/../CSE-Home/CYOA.py" />
+    <entry file="file://$USER_HOME$/.PyCharmCE2017.2/system/python_stubs/-1120166012/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4935">
+          <caret line="235" column="4" lean-forward="false" selection-start-line="235" selection-start-column="4" selection-end-line="235" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Notes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="200" column="13" lean-forward="false" selection-start-line="200" selection-start-column="13" selection-end-line="200" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CYOA.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="1028" column="0" lean-forward="false" selection-start-line="1028" selection-start-column="0" selection-end-line="1028" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#71#108#0" expanded="false" />
+            <element signature="e#138#176#0" expanded="false" />
+            <element signature="e#211#260#0" expanded="false" />
+            <element signature="e#289#339#0" expanded="false" />
+            <element signature="e#370#420#0" expanded="false" />
+            <element signature="e#450#500#0" expanded="false" />
+            <element signature="e#532#582#0" expanded="false" />
+            <element signature="e#612#662#0" expanded="false" />
+            <element signature="e#694#744#0" expanded="false" />
+            <element signature="e#845#1092#0" expanded="false" />
+            <element signature="e#1312#1579#0" expanded="false" />
+            <element signature="e#1623#2027#0" expanded="false" />
+            <element signature="e#2178#2551#0" expanded="false" />
+            <element signature="e#4005#4789#0" expanded="false" />
+            <element signature="e#5904#6788#0" expanded="false" />
+            <element signature="e#6815#7073#0" expanded="false" />
+            <element signature="e#7101#7427#0" expanded="false" />
+            <element signature="e#7462#7645#0" expanded="false" />
+            <element signature="e#7674#7895#0" expanded="false" />
+            <element signature="e#7926#8075#0" expanded="false" />
+            <element signature="e#8106#8285#0" expanded="false" />
+            <element signature="e#8317#8541#0" expanded="false" />
+            <element signature="e#8571#10420#0" expanded="false" />
+            <element signature="e#10449#10866#0" expanded="false" />
+            <element signature="e#10891#11465#0" expanded="false" />
+            <element signature="e#11494#12132#0" expanded="false" />
+            <element signature="e#12161#12818#0" expanded="false" />
+            <element signature="e#12848#13513#0" expanded="false" />
+            <element signature="e#13538#13715#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
