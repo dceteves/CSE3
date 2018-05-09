@@ -192,6 +192,22 @@ class Character(object):
         # if None not in self.inventory:
 
 
+class Enemy(Character):
+    def __init__(self, name, description, dialogue, inv, hp, attack, weapon=None):
+        super(Enemy, self).__init__(name, description, None, inv, hp)
+        self.attack = attack
+        self.weapon = weapon
+
+    def print_descriptions(self):
+        print(redbold(self.name))
+        print(self.description)
+
+    def attack(self):
+        global health
+        health -= self.attack
+        print("You got attacked by %s." % self.name)
+
+
 class Item(object):
     def __init__(self, name, desc):
         self.name = name
@@ -302,6 +318,10 @@ class Sword(Weapon):
     def __init__(self, name, desc, damage):
         super(Sword, self).__init__(name, desc, damage)
 
+    def stats(self):
+        print(bluebold(self.name + ":"))
+        print("\t" + bold("Damage: %d" % self.damage))
+
     def hit(self):
         random_number = random.randint(0, 10)
         if random_number % 2 == 0:  # crit
@@ -338,13 +358,14 @@ class BackwardsGun(Weapon):
 
 
 class Hammer(Weapon):
-    def __init__(self, name):
+    def __init__(self, name, desc):
         super(Hammer, self).__init__(name, desc, 1)
 
     def break_door(self):
         print(bold("..."))
         time.sleep(1)
         print(bluebold("Why is this hammer made of rubber?"))
+        time.sleep(.5)
 
 
 class Consumable(Item):
@@ -529,6 +550,7 @@ Cookie = Character("Cookiezi", "This person seems to be sitting behind a desk wi
                                "slightly, but you could definitely hear it. On his monitor, he seems to be clicking "
                                "circles...", None, None, None)
 jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "stop", ['pen'], 50)
+spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", None, [], 10, 3)
 
 cookie = Food("Cookie", "A chocolate chip cookie. Seems delicious.")
 bed = Bed("Bed", "Your average-looking bed.")
@@ -560,7 +582,7 @@ COMPUTER = Room("Computer",
 HALLWAY = Room("Hallway",
                "The hallway has a few paintings with a dull red carpet on the wooden floor."
                "\nThere are stairs leading down to the south, as well as another room across yours.",
-               "DINING_ROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DINING_ROOM", None, [])
+               "DINING_ROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DINING_ROOM", spider, [])
 EMPTY_ROOM = Room("Empty Room",
                   "You enter an empty room, but in the southern-most corner there's a table with what seems to be "
                   "a drawing tablet, as well as a keyboard.",
@@ -632,6 +654,7 @@ dir2 = ['n', 's', 'e', 'w', 'u', 'd']
 
 current_node = BEDROOM
 current_node_hasChanged = True
+eacn = False  # enemy at current node
 
 print("\n" + "When using the put or take out command, make sure the syntax is:"
       + greenbold("\nput/take out <item1 name> in/from <item2 name>")
@@ -646,22 +669,45 @@ while True:
     if current_node_hasChanged:
         current_node.print_descriptions()
         current_node_hasChanged = False
-        if current_node.character is not None \
-                and current_node.character.isAlive:
-            current_node.character.print_descriptions()
+        if current_node.character is not None and current_node.character.isAlive:
+            if isinstance(current_node.character, Enemy):
+                print(redbold("You've walked into %s." % current_node.character.name.lower()))
+                eacn = True
+            else:
+                current_node.character.print_descriptions()
 
     command = input('>').lower()
 
     if command == 'quit':
         quit(0)
-    elif 'look' in command or command == 'l':
-        current_node.print_descriptions()
-        if current_node.character is None or not current_node.character.isAlive:
-            continue
+    elif 'check' in command or 'look at' in command:
+        if not inventory and weapon is None:
+            print(ntii)
         else:
-            current_node.character.print_descriptions()
-    elif 'jump' in command:
-        current_node.jump()
+            if command.strip() == 'check' or command.strip() == 'look at':
+                check_command = input("What do you want to check?\n>").lower()
+                for i, item in enumerate(inventory):
+                    if check_command == item.name.lower():
+                        item.print_descriptions()
+                        break
+                    elif 'nothing' in check_command or 'nevermind' in check_command or 'nvm' in check_command:
+                        print("ok")
+                        break
+                    else:
+                        if i != len(inventory) - 1:
+                            pass
+                        else:
+                            print(redbold("You don't have that item."))
+            else:
+                for i, item in enumerate(inventory):
+                    if item.name.lower() in command:
+                        item.print_descriptions()
+                        break
+                    else:
+                        if i != len(inventory) - 1:
+                            pass
+                        else:
+                            print(redbold("You don't have that item."))
     elif 'inv' in command or 'inventory' in command:
         if not inventory:
             print(ntii)
@@ -690,6 +736,14 @@ while True:
             print(redbold("You don't have a weapon."))
         else:
             print("Your weapon:\n\t" + bold(weapon.name.lower()))
+    elif 'look' in command or command == 'l':
+        current_node.print_descriptions()
+        if current_node.character is None or not current_node.character.isAlive:
+            continue
+        else:
+            current_node.character.print_descriptions()
+    elif 'jump' in command:
+        current_node.jump()
     elif command == "oof":
         current_node.oof()
     elif command == "ping":
@@ -700,21 +754,27 @@ while True:
     elif command == 'beep':
         print('boop')
     elif command in dir2:
-        pos = dir2.index(command)
-        command = dir1[pos]
-        try:
-            current_node.move(command)
-            current_node_hasChanged = True
-        except KeyError:
-            print(redbold("You can't go that way."))
-            current_node_hasChanged = False
+        if eacn:
+            print(redbold("There's an enemy in the room. You can't leave unless you kill it."))
+        else:
+            pos = dir2.index(command)
+            command = dir1[pos]
+            try:
+                current_node.move(command)
+                current_node_hasChanged = True
+            except KeyError:
+                print(redbold("You can't go that way."))
+                current_node_hasChanged = False
     elif command in dir1:
-        try:
-            current_node.move(command.lower())
-            current_node_hasChanged = True
-        except KeyError:
-            print(red("You can't go that way."))
-            current_node_hasChanged = False
+        if eacn:
+            print(redbold("There's an enemy in the room. You can't leave unless you kill it."))
+        else:
+            try:
+                current_node.move(command.lower())
+                current_node_hasChanged = True
+            except KeyError:
+                print(red("You can't go that way."))
+                current_node_hasChanged = False
     elif 'wear' in command:
         if not inventory:
             print(ntii)
@@ -824,9 +884,6 @@ while True:
                             pass
                         else:
                             print(nii)
-
-
-
     elif 'take' in command or 'pickup' in command.strip():
         if not current_node.items:
             print(redbold("There is nothing here to take."))
@@ -957,34 +1014,6 @@ while True:
                 print(redbold("You don't have a key."))
         else:
             print(redbold("There is no locked door to open."))
-    elif 'check' in command or 'look at' in command:
-        if not inventory:
-            print(ntii)
-        else:
-            if command == 'check' or command.strip() == 'lookat':
-                check_command = input("What do you want to check?\n>").lower()
-                for i, item in enumerate(inventory):
-                    if check_command == item.name.lower():
-                        item.print_descriptions()
-                        break
-                    elif 'nothing' in check_command or 'nevermind' in check_command or 'nvm' in check_command:
-                        print("ok")
-                        break
-                    else:
-                        if i != len(inventory) - 1:
-                            pass
-                        else:
-                            print(redbold("You don't have that item."))
-            else:
-                for i, item in enumerate(inventory):
-                    if item.name.lower() in command:
-                        item.print_descriptions()
-                        break
-                    else:
-                        if i != len(inventory) - 1:
-                            pass
-                        else:
-                            print(redbold("You don't have that item."))
     elif 'drink' in command:
         if not inventory:
             print(ntii)
@@ -1156,6 +1185,18 @@ while True:
                                 print(redbold("That isn't in your inventory."))
                     else:
                         print(redbold("That isn't in your inventory."))
+    elif 'stats' in command:
+        if weapon is None:
+            print(redbold("You don't have a weapon."))
+        else:
+            if weapon is not None:
+                weapon.stats()
+            else:
+                print(redbold("You don't have a weapon."))
+
+
+    # elif 'attack' in command:
+        
     else:
         print("Command not Recognized")
         current_node_hasChanged = False
