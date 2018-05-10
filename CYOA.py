@@ -193,9 +193,9 @@ class Character(object):
 
 
 class Enemy(Character):
-    def __init__(self, name, description, dialogue, inv, hp, attack, weapon=None):
+    def __init__(self, name, description, dialogue, inv, hp, atk, weapon=None):
         super(Enemy, self).__init__(name, description, None, inv, hp)
-        self.attack = attack
+        self.atk = atk
         self.weapon = weapon
 
     def print_descriptions(self):
@@ -204,7 +204,7 @@ class Enemy(Character):
 
     def attack(self):
         global health
-        health -= self.attack
+        health -= self.atk
         print("You got attacked by %s." % self.name)
 
 
@@ -544,10 +544,21 @@ class Book(Item):
         print(self.read_text)
 
 
+def attack():
+    global eacn
+    current_node.character.health -= weapon.damage
+    print(cyanbold("You attacked the %s." % current_node.character.name))
+    if current_node.character.health == 0:
+        print(cyanbold("You killed the %s." % current_node.character.name))
+        current_node.character = None
+        eacn = False
+
+
 # Characters and Items
 
-Cookie = Character("Cookiezi", "This person seems to be sitting behind a desk with a computer mashing his keyboard\n"
-                               "slightly, but you could definitely hear it. On his monitor, he seems to be clicking "
+
+Cookie = Character("Cookiezi", "This person seems to be sitting behind a desk with a computer, mashing his keyboard\n"
+                               "quietly, but you could definitely hear it. On his monitor, he seems to be clicking "
                                "circles...", None, None, None)
 jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "stop", ['pen'], 50)
 spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", None, [], 10, 3)
@@ -675,7 +686,8 @@ while True:
                 eacn = True
             else:
                 current_node.character.print_descriptions()
-
+    if isinstance(current_node.character, Enemy):
+        current_node.character.attack()
     command = input('>').lower()
 
     if command == 'quit':
@@ -1194,9 +1206,37 @@ while True:
             else:
                 print(redbold("You don't have a weapon."))
 
+    elif 'attack' in command:
+        if command.strip() == 'attack':
+            atk_command = input("Who do you want to attack?\n>").lower()
+            if current_node.character is not None:
+                if atk_command == current_node.character.name.lower():
+                    if isinstance(current_node.character, Enemy):
+                        attack()
+                    elif isinstance(current_node.character, Character):
+                        current_node.character.kill()
+                    else:
+                        print(redbold("That person isn't here."))
+                else:
+                    print(redbold("That person isn't here."))
+            else:
+                if 'self' in atk_command or 'myself' in atk_command:
+                    print('are you ok?')
+                else:
+                    print(redbold("That person isn't here."))
+        elif current_node.character.name.lower() in command:
+            if isinstance(current_node.character, Enemy):
+                attack()
+            elif isinstance(current_node.character, Character):
+                current_node.character.kill()
+            elif 'self' in atk_command or 'myself' in atk_command:
+                print('are you ok?')
+            else:
+                print(redbold("That person isn't here."))
 
-    # elif 'attack' in command:
-        
+
+
+
     else:
         print("Command not Recognized")
         current_node_hasChanged = False
