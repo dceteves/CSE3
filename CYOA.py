@@ -546,12 +546,23 @@ class Book(Item):
 
 def attack():
     global eacn
-    current_node.character.health -= weapon.damage
-    print(cyanbold("You attacked the %s." % current_node.character.name))
-    if current_node.character.health == 0:
-        print(cyanbold("You killed the %s." % current_node.character.name))
-        current_node.character = None
-        eacn = False
+    rn = random.randint(0, 5)  # random number
+    atk = 1  # default damage (with no weapon)
+    if weapon is not None:
+        atk = weapon.damage
+
+    if rn % 2 == 0:
+        current_node.character.health -= atk
+        if current_node.character.health == 0:
+            print(cyanbold("You killed the %s." % current_node.character.name))
+            current_node.character = None
+            eacn = False
+        else:
+            print(cyanbold("You attacked the %s." % current_node.character.name))
+            current_node.character.attack()
+    else:
+        print(redbold("You missed."))
+        current_node.character.attack()
 
 
 # Characters and Items
@@ -686,10 +697,8 @@ while True:
                 eacn = True
             else:
                 current_node.character.print_descriptions()
-    if isinstance(current_node.character, Enemy):
-        current_node.character.attack()
-    command = input('>').lower()
 
+    command = input('>').lower()
     if command == 'quit':
         quit(0)
     elif 'check' in command or 'look at' in command:
@@ -727,7 +736,12 @@ while True:
             print("Your inventory:")
             for item in inventory:
                 if item == mechKeyboard or item == drawTablet:
-                    print("\t" + redbold(item.name))
+                    print("\t" + purplebold(item.name))
+                elif isinstance(item, Container):
+                    if item.isOpen:
+                        print("\t" + bold(item.name.lower() + " (Open)"))
+                    else:
+                        print("\t" + bold(item.name.lower() + " (Closed)"))
                 else:
                     print("\t" + bold(item.name.lower()))
     elif 'armor' in command:
@@ -756,6 +770,8 @@ while True:
             current_node.character.print_descriptions()
     elif 'jump' in command:
         current_node.jump()
+    elif 'yeet' in command:
+        print(bold('yeet'))
     elif command == "oof":
         current_node.oof()
     elif command == "ping":
@@ -1177,26 +1193,11 @@ while True:
         if not inventory:
             print(ntii)
         else:
-            for i, item in enumerate(inventory):
-                if command == 'put':
-                    put_command = input("What do you want to put?\n>").lower()
-                    if put_command == item.name.lower():
-                        for item2 in inventory:
-                            putIn_command = input("Where do you want to put that?\n").lower()
-                            if putIn_command == item2.name.lower():
-                                if isinstance(item2, Container):
-                                    if item2.isOpen:
-                                        item2.put_item_in(item)
-                                    else:
-                                        print(redbold("That item isn't open."))
-                                else:
-                                    print(redbold("You can't put that in there."))
-                            elif putIn_command == put_command:
-                                print(redbold("You can't put that in itself."))
-                            else:
-                                print(redbold("That isn't in your inventory."))
-                    else:
-                        print(redbold("That isn't in your inventory."))
+            item1 = None
+            item2 = None
+            splitcmd = command.split()
+            
+
     elif 'stats' in command:
         if weapon is None:
             print(redbold("You don't have a weapon."))
@@ -1205,7 +1206,6 @@ while True:
                 weapon.stats()
             else:
                 print(redbold("You don't have a weapon."))
-
     elif 'attack' in command:
         if command.strip() == 'attack':
             atk_command = input("Who do you want to attack?\n>").lower()
@@ -1219,20 +1219,28 @@ while True:
                         print(redbold("That person isn't here."))
                 else:
                     print(redbold("That person isn't here."))
+            elif 'no one' in atk_command.strip() or 'nvm' in atk_command.strip() or 'nevermind' in atk_command.strip():
+                print('ok')
             else:
                 if 'self' in atk_command or 'myself' in atk_command:
                     print('are you ok?')
                 else:
                     print(redbold("That person isn't here."))
-        elif current_node.character.name.lower() in command:
-            if isinstance(current_node.character, Enemy):
-                attack()
-            elif isinstance(current_node.character, Character):
-                current_node.character.kill()
-            elif 'self' in atk_command or 'myself' in atk_command:
-                print('are you ok?')
+        else:
+            if current_node.character is None:
+                if 'self' in command or 'myself' in command:
+                    print('are you ok?')
+                else:
+                    print(redbold("That person isn't here."))
             else:
-                print(redbold("That person isn't here."))
+                if current_node.character.name.lower() in command:
+                    if isinstance(current_node.character, Enemy):
+                        attack()
+                    elif isinstance(current_node.character, Character):
+                        current_node.character.kill()
+                else:
+                    print(redbold("That person isn't here."))
+
 
 
 
