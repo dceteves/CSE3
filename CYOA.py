@@ -403,11 +403,12 @@ class Container(Item):
         self.isEmpty = False
 
     def put_item_in(self, item_name):
-        if self.inventory.len() == capacity:
+        if len(self.inventory) == self.capacity:
             print(redbold("Your inventory is full."))
         else:
             self.inventory.append(item_name)
-            print(cyanbold("You put the %s in the %s.") % (item_name.lower(), self.name.lower()))
+            inventory.pop(inventory.index(item_name))
+            print(cyanbold("You put the %s in the %s.") % (item_name.name.lower(), self.name.lower()))
 
     def take_out(self, item_name):
         self.inventory.pop(self.inventory.index(item_name))
@@ -427,6 +428,11 @@ class Container(Item):
             print(bluebold("You close the " + self.name.lower() + "."))
         else:
             print(redbold("That is already closed."))
+
+    def lookin(self):
+        print("Your %s:" % self.name)
+        for items in self.inventory:
+            print("\t" + bold(items.name.lower()))
 
     # def drop(self):
     #     for items in self.inventory:
@@ -762,6 +768,122 @@ while True:
             print(redbold("You don't have a weapon."))
         else:
             print("Your weapon:\n\t" + bold(weapon.name.lower()))
+    elif 'open' in command:
+        if not inventory:
+            print(ntii)
+        else:
+            if command.strip() == 'open':
+                open_command = input("What do you want to open?\n>").lower()
+                for i, item in enumerate(inventory):
+                    if open_command == item.name.lower():
+                        if isinstance(item, Container):
+                            if not item.isOpen:
+                                item.open()
+                                break
+                            else:
+                                print(redbold("That is already open."))
+                                break
+                        else:
+                            print(redbold("You can't open that."))
+                            break
+                    elif 'nothing' in open_command or 'nevermind' in open_command or 'nvm' in open_command:
+                        print("ok")
+                        break
+                    else:
+                        if i != len(inventory) - 1:
+                            pass
+                        else:
+                            print(redbold("You can't open that."))
+                            break
+            else:
+                for i, item in enumerate(inventory):
+                    if item.name.lower() in command:
+                        if isinstance(item, Container):
+                            if not item.isOpen:
+                                item.open()
+                                break
+                            else:
+                                print(redbold("That is already open."))
+                                break
+                        else:
+                            print(redbold("You can't open that."))
+                            break
+                    else:
+                        if i != len(inventory) - 1:
+                            pass
+                        else:
+                            print(redbold("You can't open that."))
+                            break
+    elif 'close' in command:
+        if not inventory:
+            print(redbold("You don't have anything in your inventory to close."))
+        else:
+            if command.strip() == 'close':
+                close_command = input("What do you want to close?\n>").lower()
+                for i, item in enumerate(inventory):
+                    if close_command == item.name.lower():
+                        if isinstance(item, Container):
+                            if item.isOpen:
+                                item.close()
+                                break
+                            else:
+                                print(redbold("That is already closed."))
+                                break
+                        else:
+                            print(redbold("You can't close that."))
+                            break
+                    elif 'nothing' in close_command or 'nevermind' in close_command or 'nvm' in close_command:
+                        print("ok")
+                        break
+                    else:
+                        if i != len(inventory) - 1:
+                            pass
+                        else:
+                            print(redbold("You can't close that."))
+            else:
+                for i, item in enumerate(inventory):
+                    if item.name.lower() in command:
+                        if isinstance(item, Container):
+                            item.close()
+                            break
+                        else:
+                            print(redbold("You can't close that."))
+                            break
+                    else:
+                        if i != len(inventory) - 1:
+                            pass
+                        else:
+                            print(redbold("You can't close that."))
+                            break
+
+
+
+    elif 'look in' in command:
+        if not inventory:
+            print(ntii)
+        else:
+            if command.strip() == 'look in':
+                look_command = input("What do you want to look in?\n>").lower()
+                itm = None
+                for item in inventory:
+                    if item.name.lower() in look_command:
+                        itm = item
+
+                if not isinstance(itm, classmethod):
+                    print(redbold("You can't look in there."))
+                else:
+                    if itm in inventory:
+                        if isinstance(itm, Container):
+                            if itm.isOpen:
+                                itm.lookin()
+                            else:
+                                print(redbold("That isn't open."))
+                        else:
+                            print("You can't look in there.")
+                    else:
+                        print(nii)
+
+
     elif 'look' in command or command == 'l':
         current_node.print_descriptions()
         if current_node.character is None or not current_node.character.isAlive:
@@ -1129,66 +1251,8 @@ while True:
             time.sleep(.01)
             if health == 0:
                 break
-    elif 'open' in command:
-        if not inventory:
-            print(ntii)
-        else:
-            if command == 'open':
-                open_command = input("What do you want to open?\n>").lower()
-                for i, item in enumerate(inventory):
-                    if open_command == item.name.lower():
-                        if isinstance(item, Container):
-                            item.open()
-                        else:
-                            print(redbold("You can't open that."))
-                    elif 'nothing' in open_command or 'nevermind' in open_command or 'nvm' in open_command:
-                        print("ok")
-                    else:
-                        if i != len(inventory):
-                            pass
-                        else:
-                            print(redbold("You can't open that."))
-            else:
-                for i, item in enumerate(inventory):
-                    if item.name.lower() in command:
-                        if isinstance(item, Container):
-                            item.open()
-                        else:
-                            if i != len(inventory):
-                                pass
-                            else:
-                                print(redbold("You can't open that."))
-    elif 'close' in command:
-        if not inventory:
-            print(redbold("You don't have anything in your inventory to close."))
-        else:
-            if command == 'close':
-                open_command = input("What do you want to close?\n>").lower()
-                for i, item in enumerate(inventory):
-                    if open_command == item.name.lower():
-                        if isinstance(item, Container):
-                            item.close()
-                        else:
-                            print(redbold("You can't close that."))
-                    elif 'nothing' in close_command or 'nevermind' in close_command or 'nvm' in close_command:
-                        print("ok")
-                    else:
-                        if i != len(inventory):
-                            pass
-                        else:
-                            print(redbold("You can't open that."))
-            else:
-                for i, item in enumerate(inventory):
-                    if item.name.lower() in command:
-                        if isinstance(item, Container):
-                            item.close()
-                        else:
-                            print(redbold("You can't open that."))
-                    else:
-                        if i != len(inventory):
-                            pass
-                        else:
-                            print(redbold("You can't open that."))
+
+
     elif 'put' in command:
         if not inventory:
             print(ntii)
@@ -1196,7 +1260,34 @@ while True:
             item1 = None
             item2 = None
             splitcmd = command.split()
-            
+            try:
+                for item in inventory:
+                    if splitcmd[1] == item.name.lower():
+                        item1 = item
+                    elif splitcmd[3] == item.name.lower():
+                        item2 = item
+
+                print(item1, item2)
+
+                if item1 == item2:
+                    print(redbold("You can't put something in itself."))
+                elif not isinstance(item2, Container):
+                    print(redbold("You can't put that in there."))
+                elif item1 not in inventory or item2 not in inventory:
+                    print(redbold("You don't have that in your inventory."))
+                elif item1 and item2 not in inventory:
+                    print(redbold("You don't have those in your inventory."))
+                else:
+                    item2.put_item_in(item1)
+            except IndexError:
+                print(redbold("You are using the wrong syntax.") +
+                              "\nEx: put mask in backpack"
+                              "\n\ttake out mask from backpack"
+                              "\nDon't add any extra words!")
+
+
+
+
 
     elif 'stats' in command:
         if weapon is None:
