@@ -196,6 +196,3 @@ class Tesla(Car):
 
     def turn_on(self): Car.turn_on(self)
 """
-
-a = 'hi hello welcome'
-print(list(a))
