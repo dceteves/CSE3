@@ -230,12 +230,6 @@ class Item(object):
                 current_node.items.pop(current_node.items.index(self))
                 print(cyanbold("You take the " + self.name.lower() + "."))
 
-    def take_all(self):
-        while len(current_node.items) != 0:
-            for items in current_node.items:
-                items.take()
-            break
-
     def drop(self):
         if self == mechKeyboard or self == drawTablet:
             inventory.pop(inventory.index(self))
@@ -245,11 +239,6 @@ class Item(object):
             inventory.pop(inventory.index(self))
             current_node.items.append(self)
             print(cyanbold("You drop the " + self.name.lower() + '.'))
-
-    def drop_all(self):
-        while len(inventory) != 0:
-            for items in inventory:
-                items.drop()
 
 
 class Bed(Item):
@@ -294,7 +283,7 @@ class Weapon(Item):
     def equip(self):
         global weapon
         if weapon is None:
-            inventory.poap(inventory.index(self))
+            inventory.pop(inventory.index(self))
             weapon = self
             print(cyanbold("You equipped the " + self.name.lower() + "."))
         else:
@@ -329,24 +318,6 @@ class Sword(Weapon):
             current_node.character.health -= damage * 2
         else:
             current_Node.character.health -= damage
-
-    def equip(self):
-        global weapon
-        if weapon is None:
-            inventory.pop(inventory.index(self))
-            weapon = self
-            print(cyanbold("You equipped the " + self.name.lower() + "."))
-        else:
-            print(redbold("You already have a weapon equipped."))
-
-    def unequip(self):
-        global weapon
-        if weapon is not None:
-            inventory.append(self)
-            weapon = None
-            print(cyanbold("You unequipped the " + self.name.lower() + '.'))
-        else:
-            print(redbold("You don't have a weapon to unequip."))
 
 
 class BackwardsGun(Weapon):
@@ -556,6 +527,29 @@ def attack():
         current_node.character.attack()
 
 
+def take_all():
+    while len(current_node.items) != 0:
+        for items in current_node.items:
+            items.take()
+
+
+def drop_all():
+    while len(inventory) != 0:
+        for items in inventory:
+            items.drop()
+
+
+def suicide():
+    time.sleep(2)
+    print("ok")
+    time.sleep(.5)
+    while health != 0:
+        health -= 1
+        print(redbold("Health: ") + str(health))
+        time.sleep(.01)
+        if health == 0:
+            break
+
 # Characters and Items
 
 
@@ -576,6 +570,7 @@ cookieMask = Mask("Mask", "A mask of a smiling man wearing glasses with slits in
 shirt = Shirt("Shirt", "Just a plain white shirt.")
 weirdBag = Container("Backpack", "Just a regular backpack.", 4)
 sword = Sword("Iron Sword", "A normal iron sword.", 10)
+hammer = Hammer("Heavy Hammer", "A heavy, 2 foot long hammer with an iron head. Seems lethal.")
 
 
 mechKeyboard = Item("HyperX Alloy FPS Keyboard", "A mechanical keyboard with Cherry MX red switches.")
@@ -622,7 +617,7 @@ KITCHEN2 = Room("Farther Side of Kitchen",
                 "This side of the Kitchen has a flat screen tv mounted to the wall\nwith a smaller table below "
                 "it that holds the cable box, and an old,\nuseless game console. There's what seems to be a "
                 "laundry room to the\nwest as well as a slide door leading outside east.",
-                "KITCHEN1", None, "BACKYARD1", "LAUNDRY_ROOM", None, None, None, [])
+                "KITCHEN1", None, "BACKYARD1", "LAUNDRY_ROOM", None, None, None, [hammer])
 LAUNDRY_ROOM = Room("Laundry Room",
                     "The Laundry Room has a washing and drying machine, as well as a cabinet.",
                     "CABINET", None, "KITCHEN2", None, None, None, None, [water])
@@ -728,11 +723,10 @@ while True:
                     print("\t" + purplebold(item.name))
                 else:
                     print("\t" + bold(item.name.lower()))
-            if bp is not None:
-                print("You have a base capacity of %d, but you have a backpack "
-                      "that gives you +%d space." % (invCapacity, bp.capacity))
+            if bp is None:
+                print(purplebold("Capacity: ") + str(invCapacity))
             else:
-                print("You have a base capacity of %d." % invCapacity)
+                print(purplebold("Capacity: ") + str(invCapacity) + "(" + greenbold("+" + str(bp.capacity)) + ")")
             print("You have %s spaces left." % (invCapacity - len(inventory)))
     elif 'armor' in command:
         if head is None and chest is None and legs is None and feet is None:
@@ -887,7 +881,7 @@ while True:
                 if itm is None:
                     print(nii)
                 else:
-                    if isinstance(itm, Container) or issubclass(type(itm), Weapon):
+                    if isinstance(itm, Container) or issubclass(type(itm), Weapon) or issubclass(type(itm), Wearables):
                         itm.equip()
                     else:
                         print(redbold("You can't equip that."))
@@ -909,109 +903,109 @@ while True:
             print(redbold("There is nothing here to take."))
         else:
             if command.strip() == 'take' or command.strip() == 'pickup':
-                take_command = input("What do you want to take?\n>").lower().strip()
-                for i, item in enumerate(current_node.items):
-                    if 'all' in take_command:
-                        item.take_all()
-                    elif take_command == item.name.lower():
-                        item.take()
-                    elif 'nothing' in take_command or 'nevermind' in take_command or 'nvm' in take_command:
-                        print("ok")
-                        break
-                    else:
-                        if len(current_node.items) == 1:
-                            print(redbold("That item isn't here."))
-                        else:
-                            if i != len(current_node.items) - 1:
-                                print(redbold("That item isn't here."))
+                take_cmd = input("What do you want to take?\n>").lower().strip()
+                itm = None
+                for item in current_node.items:
+                    if item.name.lower() in take_cmd:
+                        itm = item
+
+                if 'all' in take_command:
+                    take_all()
+                elif 'nothing' in take_cmd or 'nevermind' in take_cmd or 'nvm' in take_cmd:
+                    print("ok")
+                elif itm is None:
+                    print(nii)
+                else:
+                    itm.take()
             else:
-                for i, item in enumerate(current_node.items):
-                    if 'all' in command:
-                        item.take_all()
-                    elif item.name.lower() in command:
-                        item.take()
-                    else:
-                        if len(current_node.items) == 1:
-                            print(redbold("That item isn't here."))
-                        else:
-                            if i != len(current_node.items) - 1:
-                                pass
-                            else:
-                                print(redbold("That item isn't here."))
+                itm = None
+                for item in current_node.items:
+                    if item.name.lower() in command:
+                        itm = item
+
+                if 'all' in command:
+                    take_all()
+                elif itm is None:
+                    print(nii)
+                else:
+                    itm.take()
     elif 'drop' in command:
         if not inventory:
             print(ntii)
         else:
             if command.strip() == 'drop':
-                drop_command = input("What do you want to drop?\n>").lower()
-                for i, item in enumerate(inventory):
-                    if 'all' in command:
-                        item.drop_all()
-                    elif drop_command == item.name.lower():
-                        item.drop()
-                    elif 'nothing' in drop_command or 'nevermind' in drop_command or 'nvm' in drop_command:
-                        print("ok")
-                        break
-                    else:
-                        if i != len(inventory) - 1:
-                            continue
-                        else:
-                            print(redbold("You don't have that item."))
+                drop_cmd = input("What do you want to drop?\n>").lower()
+                itm = None
+                for item in inventory:
+                    if item.name.lower() in drop_cmd:
+                        itm = item
+                
+                if 'all' in command:
+                    drop_all()
+                elif 'nothing' in drop_cmd or 'nevermind' in drop_cmd or 'nvm' in drop_cmd:
+                    print("ok")
+                elif itm is None:
+                    print(nii)
+                else:
+                    itm.drop()
             else:
-                for i, item in enumerate(inventory):
-                    if 'all' in command:
-                        item.drop_all()
-                    elif item.name.lower() in command:
-                        item.drop()
-                        break
-                    else:
-                        if i != len(inventory) - 1:
-                            continue
-                        else:
-                            print(redbold("You don't have that item."))
+                itm = None
+                for item in inventory:
+                    if item.name.lower() in command:
+                        itm = item
+                
+                if 'all' in command:
+                    drop_all()
+                elif itm is None:
+                    print(nii)
+                else:
+                    itm.drop()
     elif 'throw' in command:
         if not inventory:
             print(ntii)
         else:
             if command.strip() == 'throw':
-                throw_command = input("What do you want to throw?\n>").lower()
-                for i, item in enumerate(inventory):
-                    if throw_command == item.name.lower():
-                        if isinstance(item, Ball):
-                            item.throw()
-                        else:
-                            item.drop()
-                    elif 'nothing' in throw_command or 'nevermind' in throw_command or 'nvm' in throw_command:
-                        print("ok")
-                        break
+                throw_cmd = input("What do you want to throw?\n>").lower()
+                itm = None
+                for item in inventory:
+                    if item.name.lower() in throw_cmd:
+                        itm = item
+                        
+                if 'all' in throw_cmd:
+                    drop_all()
+                elif 'nothing' in throw_cmd or 'nevermind' in throw_cmd or 'nvm' in throw_cmd:
+                    print("ok")
+                elif itm is None:
+                    print(nii)
+                else:
+                    if isinstance(itm, Ball):
+                        itm.throw()
                     else:
-                        if i != len(inventory) - 1:
-                            continue
-                        else:
-                            print(redbold("You don't have that item."))
+                        itm.drop()
             else:
-                for i, item in enumerate(inventory):
+                itm = None
+                for item in inventory:
                     if item.name.lower() in command:
-                        if isinstance(item, Ball):
-                            item.throw()
-                        else:
-                            item.drop()
+                        itm = item
+                        
+                if 'all' in command:
+                    drop_all()
+                else:
+                    if isinstance(itm, Ball):
+                        itm.throw()
                     else:
-                        if i != len(inventory) - 1:
-                            continue
-                        else:
-                            print(redbold("You don't have that item."))
+                        itm.drop()         
     elif 'talk' in command:
         if current_node.character is None or not current_node.character.isAlive:
             print(redbold("There is no one here."))
         elif command == 'talk':
-            talk_command = input("Who do you want to talk to?\n>").lower().strip()
-            if talk_command == current_node.character.name:
+            talk_cmd = input("Who do you want to talk to?\n>").lower().strip()
+            if talk_cmd == current_node.character.name:
                 if current_node.character.isAlive:
                     current_node.character.talk()
                 else:
                     print(redbold("That person is dead."))
-            elif 'noone' in talk_command or 'nevermind' in talk_command or 'nvm' in talk_command:
+            elif 'no one' in talk_cmd or 'nevermind' in talk_cmd or 'nvm' in talk_cmd:
                 print("ok")
             else:
                 print(redbold("That person isn't here."))
@@ -1039,33 +1033,34 @@ while True:
             print(ntii)
         else:
             if command == 'drink':
-                drink_command = input("What do you want to drink?\n>").lower()
-                for i, item in enumerate(inventory):
-                    if item.name.lower() in drink_command:
-                        if isinstance(item, Drink) or isinstance(item, Bed):
-                            item.drink()
-                            break
-                        else:
-                            print("You can't drink that.")
-                    elif 'nothing' in drink_command or 'nevermind' in drink_command or 'nvm' in drink_command:
-                        print("ok")
-                        break
+                drink_cmd = input("What do you want to drink?\n>").lower().strip()
+                itm = None
+                for item in inventory:
+                    if item.name.lower() in drink_cmd:
+                        itm = item
+
+                if 'nothing' in drink_cmd or 'nevermind' in drink_cmd or 'nvm' in drink_cmd:
+                    print("ok")
+                elif itm is None:
+                    print(nii)
+                else:
+                    if isinstance(itm, Drink) or isinstance(itm, Bed):
+                        itm.drink()
                     else:
-                        if i != len(inventory) - 1:
-                            pass
-                        else:
-                            print("You don't have that in your inventory.")
+                        print(redbold("You can't drink that."))
             else:
-                for i, item in enumerate(inventory):
+                itm = None
+                for item in inventory:
                     if item.name.lower() in command:
-                        if isinstance(item, Drink) or isinstance(item, Bed):
-                            item.drink()
-                            break
-                        else:
-                            if i != len(inventory) - 1:
-                                pass
-                            else:
-                                print("You don't have that in your inventory.")
+                        itm = item
+
+                if itm is None:
+                    print(nii)
+                else:
+                    if isinstance(itm, Drink) or isinstance(itm, Bed):
+                        itm.drink()
+                    else:
+                        print(redbold("You can't drink that."))
     elif 'play' in command:
         if 'computer' in command or 'osu' in command:
             current_node.play()
@@ -1086,39 +1081,31 @@ while True:
         if command == 'kill':
             kill_command = input("Who do you want to kill?\n>").lower()
             if kill_command == 'me' or kill_command == 'self':
-                time.sleep(2)
-                print("ok")
-                time.sleep(.5)
-                while health != 0:
-                    health -= 1
-                    print(redbold("Health: ") + str(health))
-                    time.sleep(.01)
-                    if health == 0:
-                        break
+                suicide()
             elif kill_command == current_node.character.name.lower():
-                if current_node.character.isAlive:
-                    current_node.character.kill()
+                if isinstance(current_node.character, Enemy):
+                    print(redbold("This character is an enemy. You must use the attack command to kill it."))
                 else:
-                    print(redbold("That person is dead."))
+                    if current_node.character.isAlive:
+                        current_node.character.kill()
+                    else:
+                        print(redbold("That person is dead."))
             else:
                 print(redbold("That person isn't here."))
         elif current_node.character is None:
             print(redbold("There is no one here."))
         elif current_node.character.name.lower() in command:
-            if current_node.character.isAlive:
-                current_node.character.kill()
+            if isinstance(current_node.character, Enemy):
+                print(redbold("This character is an enemy. You must use the attack command to kill it."))
             else:
-                print(redbold("That person is dead."))
+                if current_node.character.isAlive:
+                    current_node.character.kill()
+                else:
+                    print(redbold("That person is dead."))
         else:
             print(redbold("That person isn't here."))
     elif 'suicide' in command:
-        time.sleep(2)
-        print("ok")
-        time.sleep(.5)
-        while health != 0:
-            health -= 1
-            print(redbold("Health: ") + str(health))
-            time.sleep(.01)
+        suicide()
     elif 'stats' in command:
         if weapon is None and bp is None:
             print(redbold("You don't have a weapon or a backpack."))
@@ -1161,6 +1148,17 @@ while True:
                         current_node.character.kill()
                 else:
                     print(redbold("That person isn't here."))
+    elif 'break door' in command:
+        if not inventory:
+            print(ntii)
+        else:
+            if current_node == LOCKED_DOOR:
+                if isinstance(weapon, Hammer):
+                    hammer.break_door()
+                else:
+                    print(redbold("You need a hammer in order to break this door."))
+            else:
+                print(redbold("There are no doors here to break open."))
     else:
         print("Command not Recognized")
         current_node_hasChanged = False
