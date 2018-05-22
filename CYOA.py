@@ -61,7 +61,6 @@ ping_phrases = ['pls',
                 'y u do dis',
                 'stop',
                 'stop doing this']
-looping_oof = ["oof"]
 
 # armor
 head = None
@@ -71,6 +70,7 @@ feet = None
 
 weapon = None
 bp = None  # backpack
+
 
 # classes
 
@@ -97,9 +97,9 @@ class Room(object):
             print("It seems you can take:")
             for items in self.items:
                 if items == mechKeyboard or items == drawTablet:
-                    print("\t" + redbold(items.name))
+                    print("\t", redbold(items.name))
                 else:
-                    print("\t" + bold(items.name.lower()))
+                    print("\t", bold(items.name.lower()))
 
     def move(self, directions):
         global current_node
@@ -115,26 +115,6 @@ class Room(object):
         else:
             print(redbold("ow"))
             time.sleep(.5)
-
-    def oof(self):
-        print(bold("".join(looping_oof)))
-        time.sleep(.5)
-        looping_oof.append("oof")
-
-    def ping(self):
-        if counter <= 2:
-            print(boldline("pong"))
-        elif counter == 3:
-            print(greenbold("don't waste your time doing this"))
-        elif counter == 4:
-            print(yellowbold("pls you have more important things other than this"))
-        elif counter == 5:
-            print(cyanbold("pls"))
-        elif counter <= 9:
-            print(purplebold(random.choice(ping_phrases)))
-        elif counter == 10:
-            print(redbold("You typed in ping too much that the game got tired of you and decided to quit"))
-            quit(0)
 
     def flush(self):
         if current_node == BATHROOM:
@@ -193,10 +173,10 @@ class Character(object):
 
 
 class Enemy(Character):
-    def __init__(self, name, description, dialogue, inv, hp, atk, weapon=None):
+    def __init__(self, name, description, inv, hp, atk, w=None):
         super(Enemy, self).__init__(name, description, None, inv, hp)
         self.atk = atk
-        self.weapon = weapon
+        self.weapon = w
 
     def print_descriptions(self):
         print(redbold(self.name))
@@ -294,10 +274,9 @@ class Weapon(Item):
         if weapon is not None:
             inventory.append(self)
             weapon = None
-            print(redbold("You unequipped the " + self.name.lower() + '.'))
+            print(cyanbold("You unequipped the " + self.name.lower() + '.'))
         else:
             print(redbold("You don't have a weapon to unequip."))
-
 
     def hit(self): current_node.character.health -= self.damage
 
@@ -336,7 +315,7 @@ class Hammer(Weapon):
     def break_door(self):
         print(bold("..."))
         time.sleep(1)
-        print(bluebold("Why is this hammer made of rubber?"))
+        print(yellowbold("Why is this hammer made of rubber?"))
         time.sleep(.5)
 
 
@@ -435,20 +414,30 @@ class Wearable(Item):
         self.body = body
 
     def equip(self):
-        if self.body is not None:
-            print(redbold("You're already wearing something."))
-        else:
-            self.body = self
-            inventory.pop(inventory.index(self))
-            print(bluebold("You wear the " + self.name))
+        global head, chest, legs, feet
+        if self.body == 'h':
+            head = self
+        elif self.body == 'c':
+            chest = self
+        elif self.body == 'l':
+            legs = self
+        elif self.body == 'f':
+            feet = self
+        inventory.pop(inventory.index(self))
+        print(bluebold("You equipped the %s." % self.name.lower()))
 
     def unequip(self):
-        if self.body is None:
-            print(redbold("You aren't wearing anything."))
-        else:
-            self.body = None
-            print(bluebold("You take off the " + self.name))
-            inventory.append(self)
+        global head, chest, legs, feet
+        if self.body == 'h':
+            head = None
+        elif self.body == 'c':
+            chest = None
+        elif self.body == 'l':
+            legs = None
+        elif self.body == 'f':
+            feet = None
+        inventory.append(self)
+        print(bluebold("You took off the %s." % self.name.lower()))
 
 
 class Mask(Wearable):
@@ -471,29 +460,6 @@ class Mask(Wearable):
         else:
             head = None
             print(bluebold("You take off the " + self.name.lower() + "."))
-            inventory.append(self)
-
-
-class Shirt(Wearable):
-    def __init__(self, name, desc):
-        super(Shirt, self).__init__(name, desc, chest)
-
-    def equip(self):
-        global chest
-        if chest is not None:
-            print(redbold("You're already wearing something."))
-        else:
-            chest = self
-            inventory.pop(inventory.index(self))
-            print(bluebold("You wear the " + self.name.lower() + "."))
-
-    def unequip(self):
-        global chest
-        if chest is None:
-            print(redbold("You aren't wearing anything."))
-        else:
-            print(bluebold("You take off the " + self.name.lower() + "."))
-            chest = None
             inventory.append(self)
 
 
@@ -540,6 +506,7 @@ def drop_all():
 
 
 def suicide():
+    global health
     time.sleep(2)
     print("ok")
     time.sleep(.5)
@@ -549,6 +516,37 @@ def suicide():
         time.sleep(.01)
         if health == 0:
             break
+
+
+def oof():
+    looping_oof = ["oof"]
+    print(bold("".join(looping_oof)))
+    time.sleep(.5)
+    looping_oof.append("oof")
+
+
+def ping():
+    if counter <= 2:
+        print(boldline("pong"))
+    elif counter == 3:
+        print(greenbold("don't waste your time doing this"))
+    elif counter == 4:
+        print(yellowbold("pls you have more important things other than this"))
+    elif counter == 5:
+        print(cyanbold("pls"))
+    elif counter <= 9:
+        print(purplebold(random.choice(ping_phrases)))
+    elif counter == 10:
+        print(redbold("You typed in ping too much that the game got tired of you and decided to quit"))
+        quit(0)
+
+
+def line():
+    line = '-'
+    for n in range(0, 100):
+        line += "-"
+    print(line)
+
 
 # Characters and Items
 
@@ -567,7 +565,7 @@ backwardsGun = BackwardsGun("Gun", "It's a gun, but its barrel is pointing the o
 water = Drink("Water Bottle", "A water bottle that has an off-center label that says 'Fiji'.")
 cookieMask = Mask("Mask", "A mask of a smiling man wearing glasses with slits in the eyes. Wonder what you'd use it "
                           "for.")
-shirt = Shirt("Shirt", "Just a plain white shirt.")
+shirt = Wearable("Shirt", "Just a plain white shirt.", 'h')
 weirdBag = Container("Backpack", "Just a regular backpack.", 4)
 sword = Sword("Iron Sword", "A normal iron sword.", 10)
 hammer = Hammer("Heavy Hammer", "A heavy, 2 foot long hammer with an iron head. Seems lethal.")
@@ -668,6 +666,8 @@ eacn = False  # enemy at current node
 time.sleep(.5)
 
 while True:
+    line()
+
     if health == 0:
         print(redbold("you died"))
         break
@@ -726,7 +726,7 @@ while True:
             if bp is None:
                 print(purplebold("Capacity: ") + str(invCapacity))
             else:
-                print(purplebold("Capacity: ") + str(invCapacity) + "(" + greenbold("+" + str(bp.capacity)) + ")")
+                print(purplebold("Capacity: "), str(invCapacity), "(", greenbold("+" + str(bp.capacity)), ")")
             print("You have %s spaces left." % (invCapacity - len(inventory)))
     elif 'armor' in command:
         if head is None and chest is None and legs is None and feet is None:
@@ -734,18 +734,18 @@ while True:
         else:
             print("You are wearing:")
             if head is not None:
-                print("\t" "Head: " + bold(head.name.lower()))
+                print("\tHead: " + bold(head.name.lower()))
             if chest is not None:
-                print("\t" + "Chest: " + bold(chest.name.lower()))
+                print("\tChest: " + bold(chest.name.lower()))
             if legs is not None:
-                print("\t" + "Legs: " + bold(legs.name.lower()))
+                print("\tLegs: " + bold(legs.name.lower()))
             if feet is not None:
-                print("\t" + "Feet: " + bold(feet.name.lower()))
+                print("\tFeet: " + bold(feet.name.lower()))
 
             if weapon is not None:
-                print("\t" + "Weapon: " + bold(weapon.name.lower()))
+                print("\tWeapon: " + bold(weapon.name.lower()))
             if bp is not None:
-                print("\t" + "Backpack: " + bold(bp.name.lower()) + " +" + bp.capacity)
+                print("\tBackpack: " + bold(bp.name.lower()) + " +" + bp.capacity)
     elif 'look' in command or command == 'l':
         current_node.print_descriptions()
         if current_node.character is None or not current_node.character.isAlive:
@@ -758,13 +758,15 @@ while True:
         print(bold('yeet'))
     elif command == "oof":
         current_node.oof()
+    elif command == 'flush':
+        current_node.flush()
+    elif 'suicide' in command:
+        suicide()
+    elif command == 'beep':
+        print('boop')
     elif command == "ping":
         current_node.ping()
         counter += 1
-    elif command == 'flush':
-        current_node.flush()
-    elif command == 'beep':
-        print('boop')
     elif command in dir2:
         if eacn:
             print(redbold("There's an enemy in the room. You can't leave unless you kill it."))
@@ -821,52 +823,59 @@ while True:
                     else:
                         print(redbold("You can't wear that."))
     elif 'take off' in command or 'unequip' in command:
-        if head is None and chest is None and legs is None and feet is None and weapon is None and bp is None:
+        if head is None \
+                and chest is None and legs is None \
+                and feet is None and weapon is None \
+                and bp is None:
             print(redbold("You aren't wearing anything."))
         else:
-            if command == 'take off' or command.strip() == 'unequip':
-                unequip_command = input("What do you want to take off?\n>").lower()
-                if head is not None:
-                    if head.name.lower() in unequip_command:
-                        head.unequip()
-                elif chest is not None:
-                    if chest.name.lower() in unequip_command:
-                        chest.unequip()
-                elif legs is not None:
-                    if legs.name.lower() in unequip_command:
-                        legs.unequip()
-                elif feet is not None:
-                    if feet.name.lower() in unequip_command:
-                        feet.unequip()
-                elif weapon is not None:
-                    if weapon.name.lower() in unequip_command:
-                        weapon.unequip()
-                elif bp is not None:
-                    if bp.name.lower() in unequip_command:
-                        bp.unequip()
-                else:
+            if command.strip() == 'take off' or command.strip() == 'unequip':
+                unequip_cmd = input("What do you want to take off?\n>").lower()
+                try:
+                    if head is not None:
+                        if head.name.lower() in unequip_cmd:
+                            head.unequip()
+                    elif chest is not None:
+                        if chest.name.lower() in unequip_cmd:
+                            chest.unequip()
+                    elif legs is not None:
+                        if legs.name.lower() in unequip_cmd:
+                            legs.unequip()
+                    elif feet is not None:
+                        if feet.name.lower() in unequip_cmd:
+                            feet.unequip()
+                    elif weapon is not None:
+                        if weapon.name.lower() in unequip_cmd:
+                            weapon.unequip()
+                    elif bp is not None:
+                        if bp.name.lower() in unequip_cmd:
+                            bp.unequip()
+                    elif unequip_cmd == 'nvm' or unequip_cmd == 'nothing':
+                        print('ok')
+                except AttributeError:
                     print(redbold("You aren't wearing that."))
             else:
-                if head is not None:
-                    if head.name.lower() in command:
-                        head.unequip()
-                elif chest is not None:
-                    if chest.name.lower() in command:
-                        chest.unequip()
-                elif legs is not None:
-                    if legs.name.lower() in command:
-                        legs.unequip()
-                elif feet is not None:
-                    if feet.name.lower() in command:
-                        feet.unequip()
-                elif weapon is not None:
-                    if weapon.name.lower() in command:
-                        weapon.unequip()
-                elif bp is not None:
-                    if bp.name.lower() in command:
-                        bp.unequip()
-                else:
-                    print(redbold("You aren't wearing anything."))
+                try:
+                    if head is not None:
+                        if head.name.lower() in command:
+                            head.unequip()
+                    elif chest is not None:
+                        if chest.name.lower() in command:
+                            chest.unequip()
+                    elif legs is not None:
+                        if legs.name.lower() in command:
+                            legs.unequip()
+                    elif feet is not None:
+                        if feet.name.lower() in command:
+                            feet.unequip()
+                    elif weapon is not None:
+                        if weapon.name.lower() in command:
+                            weapon.unequip()
+                    elif bp is not None:
+                        if bp.name.lower() in command:
+                            bp.unequip()
+                except AttributeError:
+                    print(redbold("You aren't wearing that."))
     elif 'equip' in command:
         if not inventory:
             print(ntii)
@@ -881,7 +890,10 @@ while True:
                 if itm is None:
                     print(nii)
                 else:
-                    if isinstance(itm, Container) or issubclass(type(itm), Weapon) or issubclass(type(itm), Wearables):
+                    if isinstance(itm, Container) \
+                            or issubclass(type(itm), Weapon) \
+                            or issubclass(type(itm), Wearable) \
+                            or isinstance(itm, Bed):
                         itm.equip()
                     else:
                         print(redbold("You can't equip that."))
@@ -894,7 +906,10 @@ while True:
                 if itm is None:
                     print(nii)
                 else:
-                    if isinstance(itm, Container) or issubclass(type(itm), Weapon):
+                    if isinstance(itm, Container) \
+                            or issubclass(type(itm), Weapon) \
+                            or issubclass(type(itm), Wearable) \
+                            or isinstance(itm, Bed):
                         itm.equip()
                     else:
                         print(redbold("You can't equip that."))
@@ -998,26 +1013,26 @@ while True:
     elif 'talk' in command:
         if current_node.character is None or not current_node.character.isAlive:
             print(redbold("There is no one here."))
-        elif command == 'talk':
-            talk_cmd = input("Who do you want to talk to?\n>").lower().strip()
-            if talk_cmd == current_node.character.name:
-                if current_node.character.isAlive:
-                    current_node.character.talk()
-                else:
-                    print(redbold("That person is dead."))
-            elif 'no one' in talk_cmd or 'nevermind' in talk_cmd or 'nvm' in talk_cmd:
-                print("ok")
-            else:
-                print(redbold("That person isn't here."))
-        elif current_node.character.name.lower() in command:
-            if current_node.character.isAlive:
-                current_node.character.talk()
-            elif not current_node.character.isAlive:
-                print(redbold("That person is dead."))
-            else:
-                print(redbold("That person isn't here."))
         else:
-            print(redbold("That person isn't here."))
+            if command == 'talk':
+                talk_cmd = input("Who do you want to talk to?\n>").lower().strip()
+                if talk_cmd == current_node.character.name.lower():
+                    if current_node.character.isAlive:
+                        current_node.character.talk()
+                    else:
+                        print(redbold("That person is dead."))
+                elif 'no one' in talk_cmd or 'nevermind' in talk_cmd or 'nvm' in talk_cmd:
+                    print("ok")
+                else:
+                    print(redbold("That person isn't here."))
+            else:
+                if current_node.character.name.lower() in command:
+                    if current_node.character.isAlive:
+                        current_node.character.talk()
+                    else:
+                        print(redbold("That person is dead."))
+                else:
+                    print(redbold("That person isn't here."))
     elif 'open door' in command:
         if current_node == LOCKED_DOOR:
             if techRoomKey in inventory:
@@ -1104,8 +1119,6 @@ while True:
                     print(redbold("That person is dead."))
         else:
             print(redbold("That person isn't here."))
-    elif 'suicide' in command:
-        suicide()
     elif 'stats' in command:
         if weapon is None and bp is None:
             print(redbold("You don't have a weapon or a backpack."))
@@ -1159,6 +1172,3 @@ while True:
                     print(redbold("You need a hammer in order to break this door."))
             else:
                 print(redbold("There are no doors here to break open."))
-    else:
-        print("Command not Recognized")
-        current_node_hasChanged = False
