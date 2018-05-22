@@ -212,11 +212,11 @@ class Item(object):
 
     def drop(self):
         if self == mechKeyboard or self == drawTablet:
-            inventory.pop(inventory.index(self))
+            inventory.remove(self)
             current_node.items.append(self)
             print(cyanbold("You drop the " + self.name + '.'))
         else:
-            inventory.pop(inventory.index(self))
+            inventory.remove(self)
             current_node.items.append(self)
             print(cyanbold("You drop the " + self.name.lower() + '.'))
 
@@ -236,7 +236,7 @@ class Bed(Item):
             time.sleep(.5)
             head = bed
             print(bluebold("You wear the bed."))
-            inventory.pop(inventory.index(self))
+            inventory.remove(self)
 
     def unequip(self):
         global head
@@ -263,7 +263,7 @@ class Weapon(Item):
     def equip(self):
         global weapon
         if weapon is None:
-            inventory.pop(inventory.index(self))
+            inventory.remove(self)
             weapon = self
             print(cyanbold("You equipped the " + self.name.lower() + "."))
         else:
@@ -324,7 +324,7 @@ class Consumable(Item):
         super(Consumable, self).__init__(name, desc)
 
     def use(self):
-        inventory.pop(inventory.index(self))
+        inventory.remove(self)
 
 
 class Food(Consumable):
@@ -332,7 +332,7 @@ class Food(Consumable):
         super(Food, self).__init__(name, desc)
 
     def eat(self):
-        inventory.pop(inventory.index(self))
+        inventory.remove(self)
         print(purplebold("yummy"))
 
 
@@ -341,7 +341,7 @@ class Drink(Consumable):
         super(Drink, self).__init__(name, desc)
 
     def drink(self):
-        inventory.pop(inventory.index(self))
+        inventory.remove(self)
         print(bluebold("You drink the %s and its bottle disappears...") % self.name.lower())
 
 
@@ -355,7 +355,7 @@ class Container(Item):
         global invCapacity
         bp = self
         invCapacity += self.capacity
-        inventory.pop(inventory.index(self))
+        inventory.remove(self)
         print(cyanbold("You equipped the %s. You got +%d inventory space." % (self.name.lower(), self.capacity)))
 
     def unequip(self):
@@ -423,7 +423,7 @@ class Wearable(Item):
             legs = self
         elif self.body == 'f':
             feet = self
-        inventory.pop(inventory.index(self))
+        inventory.remove(self)
         print(bluebold("You equipped the %s." % self.name.lower()))
 
     def unequip(self):
@@ -450,7 +450,7 @@ class Mask(Wearable):
             print(redbold("You're already wearing something."))
         else:
             head = self
-            inventory.pop(inventory.index(self))
+            inventory.remove(self)
             print(bluebold("You wear the " + self.name.lower() + "."))
 
     def unequip(self):
@@ -481,12 +481,14 @@ def attack():
 
     if rn % 2 == 0:
         current_node.character.health -= atk
-        if current_node.character.health == 0:
+        if current_node.character.health <= 0:
             print(cyanbold("You killed the %s." % current_node.character.name))
             current_node.character = None
             eacn = False
         else:
             print(cyanbold("You attacked the %s." % current_node.character.name))
+            print((purplebold("%s Health: ") % current_node.character.name)
+                  + str(current_node.character.health))
             current_node.character.attack()
     else:
         print(redbold("You missed."))
@@ -542,10 +544,19 @@ def ping():
 
 
 def line():
-    line = '-'
-    for n in range(0, 100):
-        line += "-"
-    print(line)
+    ln = '-'
+    for n in range(0, 75):
+        ln += "-"
+    print(ln)
+
+
+def lookup():
+    print("...")
+    time.sleep(1)
+    print(redbold("You look up and the roof falls on your head."))
+    time.sleep(.5)
+    print(redbold("You died."))
+    quit(0)
 
 
 # Characters and Items
@@ -555,7 +566,7 @@ Cookie = Character("Cookiezi", "This person seems to be sitting behind a desk wi
                                "quietly, but you could definitely hear it. On his monitor, he seems to be clicking "
                                "circles...", None, None, None)
 jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "stop", ['pen'], 50)
-spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", None, [], 10, 3)
+spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", [None], 10, 3)
 
 cookie = Food("Cookie", "A chocolate chip cookie. Seems delicious.")
 bed = Bed("Bed", "Your average-looking bed.")
@@ -584,19 +595,19 @@ BEDROOM = Room("Bedroom",
                "COMPUTER", None, "HALLWAY", None, None, None, None, [bed, shirt, sword])
 COMPUTER = Room("Computer",
                 "On the desk lies a computer with a crappy membrane keyboard and a mouse. "
-                "On the computer lies a weird game called 'osu!'...",
+                "\nOn the computer lies a weird game called 'osu!'...",
                 None, "BEDROOM", "HALLWAY", None, None, None, None, [weirdBag])
 HALLWAY = Room("Hallway",
                "The hallway has a few paintings with a dull red carpet on the wooden floor."
                "\nThere are stairs leading down to the south, as well as another room across yours.",
-               "DINING_ROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DINING_ROOM", spider, [])
+               "DINING_ROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DINING_ROOM", None, [])
 EMPTY_ROOM = Room("Empty Room",
-                  "You enter an empty room, but in the southern-most corner there's a table with what seems to be "
-                  "a drawing tablet, as well as a keyboard.",
+                  "You enter an empty room, but in the southern-most corner there's a "
+                  "\ntable with what seems to be a drawing tablet, as well as a keyboard.",
                   "HALLWAY", "TABLE", None, None, None, None, jeff, [backwardsGun])
 TABLE = Room("Table",
              "On the table there is a key and empty boxes with labels saying "
-             "'HyperX Alloy FPS Mechanical Gaming Keyboard' as well as another\n"
+             "\n'HyperX Alloy FPS Mechanical Gaming Keyboard' as well as another\n"
              "box that says 'Huion Graphics Tablet'...",
              "EMPTY_ROOM", None, None, None, None, None, None, [techRoomKey, mechKeyboard, drawTablet])
 BATHROOM = Room("Bathroom",
@@ -604,8 +615,8 @@ BATHROOM = Room("Bathroom",
                 "There are also toiletries sitting on top of the sink counter.",
                 None, None, None, "HALLWAY", None, None, None, [])
 DINING_ROOM = Room("Dining Room",
-                   "The dining room has a table with a fancy green cloth and a basket full of fake fruit."
-                   "\nThe kitchen leads east, and the living room to the west.",
+                   "The dining room has a table with a fancy green cloth and a basket "
+                   "\nfull of fake fruit. The kitchen leads east, and the living room to the west.",
                    None, "HALLWAY", "KITCHEN1", "LIVING_ROOM", "HALLWAY", None, None, [cookie])
 KITCHEN1 = Room("Entrance to Kitchen",
                 "In the kitchen there's a refrigerator and a pantry full of "
@@ -630,8 +641,8 @@ BACKYARD1 = Room("Backyard",
                  "around them.",
                  "BACKYARD2", None, None, "KITCHEN2", None, None, None, [ball])
 BACKYARD2 = Room("Farther side of the Backyard",
-                 "This side of the backyard has an unused grill and a bench lying at the wall of the house. And "
-                 "more tennis balls...", None, "BACKYARD1", None, None, None, None, None, [ball])
+                 "This side of the backyard has an unused grill and a bench lying\nat the wall of the house. "
+                 "And more tennis balls...", None, "BACKYARD1", None, None, None, None, None, [ball])
 LIVING_ROOM = Room("Living Room",
                    "The living room has couches set with a large TV.\nThe exit seems to go the south.",
                    None, "DOOR", "DINING_ROOM", None, None, None, None, [])
@@ -645,8 +656,8 @@ PORCH = Room("Porch",
              "the west to exit the porch and into the driveway.",
              None, None, "DOOR", "DRIVEWAY", None, None, None, [])
 DRIVEWAY = Room("Driveway",
-                "The drive way has a basketball hoop, but to the west you see a store with a sign that says... "
-                "Walm.\nYou can go back north into the porch.", "PORCH", None, None, "STORE", None, None, None, [])
+                "The drive way has a basketball hoop, but to the west you see a store with a\nsign that says... Walm."
+                "\nYou can go back north into the porch.", "PORCH", None, None, "STORE", None, None, None, [])
 STORE = Room("Walm", "Sorry to keep your hopes up, this store is closed.",
              None, None, "DRIVEWAY", None, None, None, None, [])
 
@@ -671,7 +682,7 @@ while True:
     if health == 0:
         print(redbold("you died"))
         break
-    print(redbold("Health: ") + str(health))
+    print(redbold("Health: "), str(health))
     if current_node_hasChanged:
         current_node.print_descriptions()
         current_node_hasChanged = False
@@ -686,6 +697,34 @@ while True:
 
     if command == 'quit':
         quit(0)
+    elif command == 'help':
+        print("-> To move, use the cardinal directions.")
+        print("-> If you don't know where you are, type 'l' or 'look'.")
+        print("-> For items, use them how you would in real life.")
+    elif 'do it to em' in command:
+        print("\n", yellowbold(
+            "⠀⠀⠀⠀⣠⣦⣤⣀ ⠀⠀⠀⠀⢡⣤⣿⣿ \n"
+            "⠀⠀⠀⠀⠠⠜⢾⡟ ⠀⠀⠀⠀⠀⠹⠿⠃⠄ \n"
+            "⠀⠀⠈⠀⠉⠉⠑⠀⠀⠠⢈⣆ \n"
+            "⠀⠀⣄⠀⠀⠀⠀⠀⢶⣷⠃⢵ \n"
+            "⠐⠰⣷⠀⠀⠀⠀⢀⢟⣽⣆⠀⢃ \n"
+            "⠰⣾⣶⣤⡼⢳⣦⣤⣴⣾⣿⣿⠞ \n"
+            "⠀⠈⠉⠉⠛⠛⠉⠉⠉⠙⠁ \n"
+            "⠀⠀⡐⠘⣿⣿⣯⠿⠛⣿⡄ \n"
+            "⠀⠀⠁⢀⣄⣄⣠⡥⠔⣻⡇ \n"
+            "⠀⠀⠀⠘⣛⣿⣟⣖⢭⣿⡇ \n"
+            "⠀⠀⢀⣿⣿⣿⣿⣷⣿⣽⡇ \n"
+            "⠀⠀⢸⣿⣿⣿⡇⣿⣿⣿⣇ \n"
+            "⠀⠀⠀⢹⣿⣿⡀⠸⣿⣿⡏ \n"
+            "⠀⠀⠀⢸⣿⣿⠇⠀⣿⣿⣿ \n"
+            "⠀⠀⠀⠈⣿⣿⠀⠀⢸⣿⡿ \n"
+            "⠀⠀⠀⠀⣿⣿⠀⠀⢀⣿⡇ \n"
+            "⠀⣠⣴⣿⡿⠟⠀⠀⢸⣿⣷ \n"
+            "⠀⠉⠉⠁⠀⠀⠀⠀⢸⣿⣿⠁ \n"
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈\n"
+        ))
+    elif command.strip() == 'look up':
+        lookup()
     elif 'check' in command or 'look at' in command:
         if not inventory and weapon is None:
             print(ntii)
