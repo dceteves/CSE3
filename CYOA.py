@@ -48,7 +48,7 @@ nii = redbold("That is not in your inventory.")  # not in inventory
 ntii = redbold("You have nothing in your inventory.")  # nothing in inventory
 
 # Extra stuff
-counter = 0  # for oof (??)
+pcount = 0  
 inventory = []
 invCapacity = 8
 health = 100
@@ -150,7 +150,6 @@ class Character(object):
         self.health = hp
         self.isAlive = True
         self.hasTalked = False
-        self.counter = 0  # counter for number of encounters of character
 
     def print_descriptions(self):
         print(greenbold(self.name))
@@ -158,7 +157,7 @@ class Character(object):
 
     def talk(self):
         if self.dialogue is None:
-            print(bluebold("This person doesn't seem to say anything."))
+            print(greenbold("This person doesn't seem to say anything."))
         else:
             print("He says...")
             time.sleep(1)
@@ -169,7 +168,8 @@ class Character(object):
     def kill(self):
         print(redbold("oh woops you killed " + self.name.lower()))
         self.isAlive = False
-        # if None not in self.inventory:
+        if self.inventory:
+            enemy_drop()
 
 
 class Enemy(Character):
@@ -200,15 +200,14 @@ class Item(object):
     def take(self):
         if len(inventory) == invCapacity:
             print(redbold("Your inventory is full."))
+        elif self == mechKeyboard or self == drawTablet:
+            inventory.append(self)
+            current_node.items.pop(current_node.items.index(self))
+            print(cyanbold("You take the " + self.name + "."))
         else:
-            if self == mechKeyboard or self == drawTablet:
-                inventory.append(self)
-                current_node.items.pop(current_node.items.index(self))
-                print(cyanbold("You take the " + self.name + "."))
-            else:
-                inventory.append(self)
-                current_node.items.pop(current_node.items.index(self))
-                print(cyanbold("You take the " + self.name.lower() + "."))
+            inventory.append(self)
+            current_node.items.pop(current_node.items.index(self))
+            print(cyanbold("You take the " + self.name.lower() + "."))
 
     def drop(self):
         if self == mechKeyboard or self == drawTablet:
@@ -483,6 +482,8 @@ def attack():
         current_node.character.health -= atk
         if current_node.character.health <= 0:
             print(cyanbold("You killed the %s." % current_node.character.name))
+            if current_node.character.inventory:
+                enemy_drop()
             current_node.character = None
             eacn = False
         else:
@@ -496,15 +497,27 @@ def attack():
 
 
 def take_all():
-    while len(current_node.items) != 0:
-        for items in current_node.items:
+    curitm = current_node.items
+    while len(curitm) != 0:
+        for items in curitm:
             items.take()
+            print(len(curitm))
+
 
 
 def drop_all():
     while len(inventory) != 0:
         for items in inventory:
             items.drop()
+
+
+def enemy_drop():
+    enemy = current_node.character
+    while len(enemy.inventory)!= 0:
+        for _itm in enemy.inventory:
+            current_node.items.append(_itm)
+            enemy.inventory.remove(_itm)
+            print(purplebold("The %s dropped %s." % (enemy.name, _itm.name)))
 
 
 def suicide():
@@ -528,17 +541,17 @@ def oof():
 
 
 def ping():
-    if counter <= 2:
+    if pcount <= 2:
         print(boldline("pong"))
-    elif counter == 3:
+    elif pcount == 3:
         print(greenbold("don't waste your time doing this"))
-    elif counter == 4:
+    elif pcount == 4:
         print(yellowbold("pls you have more important things other than this"))
-    elif counter == 5:
+    elif pcount == 5:
         print(cyanbold("pls"))
-    elif counter <= 9:
+    elif pcount <= 9:
         print(purplebold(random.choice(ping_phrases)))
-    elif counter == 10:
+    elif pcount == 10:
         print(redbold("You typed in ping too much that the game got tired of you and decided to quit"))
         quit(0)
 
@@ -561,13 +574,6 @@ def lookup():
 
 # Characters and Items
 
-
-Cookie = Character("Cookiezi", "This person seems to be sitting behind a desk with a computer, mashing his keyboard\n"
-                               "quietly, but you could definitely hear it. On his monitor, he seems to be clicking "
-                               "circles...", None, None, None)
-jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "stop", ['pen'], 50)
-spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", [None], 10, 3)
-
 cookie = Food("Cookie", "A chocolate chip cookie. Seems delicious.")
 bed = Bed("Bed", "Your average-looking bed.")
 ball = Ball("Ball", "A regular, old tennis ball.")
@@ -580,12 +586,18 @@ shirt = Wearable("Shirt", "Just a plain white shirt.", 'h')
 weirdBag = Container("Backpack", "Just a regular backpack.", 4)
 sword = Sword("Iron Sword", "A normal iron sword.", 10)
 hammer = Hammer("Heavy Hammer", "A heavy, 2 foot long hammer with an iron head. Seems lethal.")
+silk = Item("Silk", "Authentic spider silk.")
+
+Cookie = Character("Cookiezi", "This person seems to be sitting behind a desk with a computer, mashing his keyboard\n"
+                               "quietly, but you could definitely hear it. On his monitor, he seems to be clicking "
+                               "circles...", None, None, None)
+jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "stop", ['pen'], 50)
+spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", [silk], 10, 3)
 
 
 mechKeyboard = Item("HyperX Alloy FPS Keyboard", "A mechanical keyboard with Cherry MX red switches.")
 drawTablet = Item("Huion Graphics Tablet", "A normal graphics tablet. Seems cheap.")
 
-testitem = Item("test item", "just a test item")
 
 # Rooms
 
@@ -600,7 +612,7 @@ COMPUTER = Room("Computer",
 HALLWAY = Room("Hallway",
                "The hallway has a few paintings with a dull red carpet on the wooden floor."
                "\nThere are stairs leading down to the south, as well as another room across yours.",
-               "DINING_ROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DINING_ROOM", None, [])
+               "DINING_ROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DINING_ROOM", spider, [])
 EMPTY_ROOM = Room("Empty Room",
                   "You enter an empty room, but in the southern-most corner there's a "
                   "\ntable with what seems to be a drawing tablet, as well as a keyboard.",
@@ -612,7 +624,7 @@ TABLE = Room("Table",
              "EMPTY_ROOM", None, None, None, None, None, None, [techRoomKey, mechKeyboard, drawTablet])
 BATHROOM = Room("Bathroom",
                 "The bathroom is set with two sinks, a bathtub and a toilet.\n"
-                "There are also toiletries sitting on top of the sink counter.",
+                "There are also toiletries sitting on top of the sink pcount.",
                 None, None, None, "HALLWAY", None, None, None, [])
 DINING_ROOM = Room("Dining Room",
                    "The dining room has a table with a fancy green cloth and a basket "
@@ -620,7 +632,7 @@ DINING_ROOM = Room("Dining Room",
                    None, "HALLWAY", "KITCHEN1", "LIVING_ROOM", "HALLWAY", None, None, [cookie])
 KITCHEN1 = Room("Entrance to Kitchen",
                 "In the kitchen there's a refrigerator and a pantry full of "
-                "food,\nas well as a long counter to eat food on. There's more stuff farther south.",
+                "food,\nas well as a long pcount to eat food on. There's more stuff farther south.",
                 "DINING_ROOM", "KITCHEN2", None, None, None, None, None, [])
 KITCHEN2 = Room("Farther Side of Kitchen",
                 "This side of the Kitchen has a flat screen tv mounted to the wall\nwith a smaller table below "
@@ -671,7 +683,7 @@ dir1 = ['north', 'south', 'east', 'west', 'up', 'down']
 dir2 = ['n', 's', 'e', 'w', 'u', 'd']
 
 current_node = BEDROOM
-current_node_hasChanged = True
+curchange = True
 eacn = False  # enemy at current node
 
 time.sleep(.5)
@@ -683,9 +695,9 @@ while True:
         print(redbold("you died"))
         break
     print(redbold("Health: "), str(health))
-    if current_node_hasChanged:
+    if curchange:
         current_node.print_descriptions()
-        current_node_hasChanged = False
+        curchange = False
         if current_node.character is not None and current_node.character.isAlive:
             if isinstance(current_node.character, Enemy):
                 print(redbold("You've walked into %s." % current_node.character.name.lower()))
@@ -805,7 +817,7 @@ while True:
         print('boop')
     elif command == "ping":
         current_node.ping()
-        counter += 1
+        pcount += 1
     elif command in dir2:
         if eacn:
             print(redbold("There's an enemy in the room. You can't leave unless you kill it."))
@@ -814,20 +826,20 @@ while True:
             command = dir1[pos]
             try:
                 current_node.move(command)
-                current_node_hasChanged = True
+                curchange = True
             except KeyError:
                 print(redbold("You can't go that way."))
-                current_node_hasChanged = False
+                curchange = False
     elif command in dir1:
         if eacn:
             print(redbold("There's an enemy in the room. You can't leave unless you kill it."))
         else:
             try:
                 current_node.move(command.lower())
-                current_node_hasChanged = True
+                curchange = True
             except KeyError:
                 print(red("You can't go that way."))
-                current_node_hasChanged = False
+                curchange = False
     elif 'wear' in command:
         if not inventory:
             print(ntii)
@@ -964,7 +976,10 @@ while True:
                         itm = item
 
                 if 'all' in take_command:
-                    take_all()
+                    if len(current_node.items) <= invCapacity:
+                        take_all()
+                    else:
+                        print(redbold("You don't have any more space."))
                 elif 'nothing' in take_cmd or 'nevermind' in take_cmd or 'nvm' in take_cmd:
                     print("ok")
                 elif itm is None:
@@ -978,7 +993,10 @@ while True:
                         itm = item
 
                 if 'all' in command:
-                    take_all()
+                    if len(current_node.items) <= invCapacity:
+                        take_all()
+                    else:
+                        print(redbold("You don't have any more space."))
                 elif itm is None:
                     print(nii)
                 else:
@@ -1077,7 +1095,7 @@ while True:
             if techRoomKey in inventory:
                 current_node = TECH_ROOM
                 print(bluebold("You open the door.\n"))
-                current_node_hasChanged = True
+                curchange = True
             else:
                 print(redbold("You don't have a key."))
         else:
