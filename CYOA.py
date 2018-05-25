@@ -334,8 +334,10 @@ class Food(Consumable):
         super(Food, self).__init__(name, desc)
 
     def eat(self):
+        global health
         inventory.remove(self)
         print(purplebold("yummy"))
+        health = 100
 
 
 class Drink(Consumable):
@@ -471,7 +473,10 @@ class Book(Item):
         self.readText = read_text
 
     def read(self):
-        print(self.read_text)
+        print("You open the book and read:")
+        time.sleep(1)
+        print(self.readText)
+        time.sleep(.5)
 
 
 # function instantiation
@@ -589,13 +594,13 @@ def line():
 def lookup():
     print("...")
     time.sleep(1)
-    print(redbold("You look up and the roof falls on your head."))
+    print(redbold("You look up and a piece of rock falls on your head."))
     time.sleep(.5)
     print(redbold("You died."))
     quit(0)
 
 # characters and items
-cm_desc = "A mask of a smiling man wearing glasses with slits in the eyes. Wonder what you'd use it for."
+cm_desc = "A paper mask of a smiling man wearing glasses with slits in the eyes. Wonder what you'd use it for."
 
 ckie = Food("Cookie", "A chocolate chip cookie. Seems delicious.")
 bed = Bed("Bed", "Your average-looking bed.")
@@ -611,14 +616,23 @@ hammer = Hammer("Heavy Hammer", "A heavy, 2 foot long hammer with an iron head. 
 silk = Item("Silk", "Authentic spider silk.")
 mechKeyboard = Item("HyperX Alloy FPS Keyboard", "A mechanical keyboard with Cherry MX red switches.")
 drawTablet = Item("Huion Graphics Tablet", "A normal graphics tablet. Seems cheap.")
+fang = Item("Snake Fang", "Fangs of a snake.")
+book = Book("Book", "A brown book. Wonder what it says.", greenbold("if you're reading this it's too late"))
+spaghetti = Food("Spaghetti", "Normal, authentic spaghetti.")
+
+
 
 c_desc = "This person seems to be sitting behind a desk with a computer, mashing his keyboard" \
          "\nquietly, but you could definitely hear it. On his monitor, he seems to be clicking " \
          "circles..."
 
 Cookie = Character("Cookiezi", c_desc, None, None, None)
-jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "stop", [], 50)
+jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "no", [], 50)
 spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", [silk], 10, 3)
+snake = Enemy("Snake", "A long slithering snake.", [fang], 20, 5)
+guard = Enemy("Guard", "He seems to be protecting the stuff on the table.", [book, spaghetti], 30, 10)
+
+
 
 # Rooms
 broom_desc = "You are in a bedroom full of anime posters, figures, etc." \
@@ -632,12 +646,11 @@ eroom_desc = "You enter an empty room, but in the southern-most corner there's a
 t_desc = "On the table there is a key and empty boxes with labels saying" \
             "\n'HyperX Alloy FPS Mechanical Gaming Keyboard' as well as another\n" \
             "box that says 'Huion Graphics Tablet'..."
-bth_desc = "The bathroom is set with two sinks, a bathtub and a toilet." \
-           "\nThere are also toiletries sitting on top of the sink pcount."
+bth_desc = "The bathroom is set with two sinks, a bathtub and a toilet."
 droom_desc = "The dining room has a table with a fancy green cloth and a basket" \
          "\nfull of fake fruit. The kitchen leads east, and the living room to the west."
 k1_desc = "In the kitchen there's a refrigerator and a pantry full of food," \
-          "\nas well as a long pcount to eat food on. There's more stuff farther south."
+          "\nas well as a long counter to eat food on. There's more stuff farther south."
 k2_desc = "This side of the Kitchen has a flat screen tv mounted to the wall\nwith a smaller table below " \
           "it that holds the cable box, and an old,\nuseless game console. There's what seems to be a " \
           "laundry room to the\nwest as well as a slide door leading outside east."
@@ -665,7 +678,7 @@ BEDROOM = Room("Bedroom", broom_desc, "COMPUTER", None, "HALLWAY", None, None, N
 COMPUTER = Room("Computer", compute_desc, None, "BEDROOM", "HALLWAY", None, None, None, None, [weirdBag])
 HALLWAY = Room("Hallway", hal_desc, "DININGROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DININGROOM", spider, [])
 EMPTY_ROOM = Room("Empty Room", eroom_desc, "HALLWAY", "TABLE", None, None, None, None, jeff, [backwardsGun])
-TABLE = Room("Table", t_desc, "EMPTY_ROOM", None, None, None, None, None, None, [techRoomKey, mechKeyboard, drawTablet])
+TABLE = Room("Table", t_desc, "EMPTY_ROOM", None, None, None, None, None, guard, [techRoomKey, mechKeyboard, drawTablet])
 BATHROOM = Room("Bathroom", bth_desc, None, None, None, "HALLWAY", None, None, None, [])
 DININGROOM = Room("Dining Room", droom_desc, None, "HALLWAY", "KITCHEN1", "LIVING_ROOM", "HALLWAY", None, None, [ckie])
 KITCHEN1 = Room("Entrance to Kitchen", k1_desc, "DININGROOM", "KITCHEN2", None, None, None, None, None, [])
@@ -678,7 +691,7 @@ LIVING_ROOM = Room("Living Room", lroom_desc, None, "DOOR", "DININGROOM", None, 
 DOOR = Room("Door", door_desc, "LIVING_ROOM", "LOCKED_DOOR", None, 'PORCH', None, None, None, [])
 LOCKED_DOOR = Room("Locked Door", "This room's door is locked.", "DOOR", None, None, None, None, None, None, [])
 PORCH = Room("Porch", prch_desc, None, None, "DOOR", "DRIVEWAY", None, None, None, [])
-DRIVEWAY = Room("Driveway", dwroom_desc, "PORCH", None, None, "STORE", None, None, None, [])
+DRIVEWAY = Room("Driveway", dwroom_desc, "PORCH", None, None, "STORE", None, None, snake, [])
 STORE = Room("Walm", walm_desc, None, None, "DRIVEWAY", None, None, None, None, [])
 
 TECH_ROOM = Room("Tech Room", troom_desc, "DOOR", None, None, None, None, None, Cookie, [])
@@ -719,6 +732,7 @@ while True:
     elif cmd == 'help':
         print("-> To move, use the cardinal directions.")
         print("-> If you don't know where you are, type 'l' or 'look'.")
+        print("-> For more detail for enemies, type 'enemy' or 'character'.")
     elif 'do it to em' in cmd:
         print("\n", yellowbold(
             "⠀⠀⠀⠀⣠⣦⣤⣀ ⠀⠀⠀⠀⢡⣤⣿⣿ \n"
@@ -1235,3 +1249,73 @@ while True:
                     print(redbold("You need a hammer in order to break this door."))
             else:
                 print(redbold("There are no doors here to break open."))
+    elif 'eat' in cmd:
+        if cmd.strip() == 'eat':
+            eat_cmd = input("What do you want to eat?\n>").lower()
+            itm = None
+            for item in inventory:
+                if item.name.lower() in eat_cmd:
+                    itm = item
+
+
+            if eat_cmd.strip() == 'nvm' or eat_cmd.strip() == 'nevermind' or eat_cmd.strip() == 'nothing':
+                print('ok')
+            elif itm is None:
+                print(nii)
+            elif isinstance(itm, Food):
+                itm.eat()
+            else:
+                print(redbold("You can't eat that."))
+        else:
+            itm = None
+            for item in inventory:
+                if item.name.lower() in cmd:
+                    itm = item
+
+            if itm is None:
+                print(nii)
+            elif isinstance(itm, Food):
+                itm.eat()
+            else:
+                print(redbold("You can't eat that."))
+    elif 'enemy' in cmd or 'character' in cmd:
+        if char is not None:
+            char.print_descriptions()
+        else:
+            print(redbold("There is no one here."))
+    elif 'read' in cmd:
+        if not inventory:
+            print(ntii)
+        else:
+            if cmd == 'read':
+                read_cmd = input("What do you want to read?\n>").lower()
+                itm = None
+                for item in inventory:
+                    if item.name.lower() in read_cmd:
+                        itm = item
+
+                if read_cmd.strip() == 'nvm' or read_cmd.strip() == 'nevermind' or read_cmd.strip() == 'nothing':
+                    print('ok')
+                elif itm is None:
+                    print(nii)
+                elif isinstance(itm, Book):
+                    itm.read()
+                else:
+                    print(redbold("You can't read that."))
+            else:
+                itm = None
+                for item in inventory:
+                    if item.name.lower() in cmd:
+                        itm = item
+
+                if itm is None:
+                    print(nii)
+                elif isinstance(itm, Book):
+                    itm.read()
+                else:
+                    print(redbold("You can't read that."))
+
+
+
+
+
