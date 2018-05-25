@@ -188,6 +188,9 @@ class Enemy(Character):
         print("You got attacked by %s." % self.name)
 
 
+# item classes
+
+
 class Item(object):
     def __init__(self, name, desc):
         self.name = name
@@ -277,7 +280,7 @@ class Weapon(Item):
         else:
             print(redbold("You don't have a weapon to unequip."))
 
-    def hit(self): current_node.character.health -= self.damage
+    def hit(self): char.health -= self.damage
 
     def check_stats(self): print(bluebold("Damage: ") + str(self.damage))
 
@@ -293,9 +296,9 @@ class Sword(Weapon):
     def hit(self):
         random_number = random.randint(0, 10)
         if random_number % 2 == 0:  # crit
-            current_node.character.health -= damage * 2
+            char.health -= damage * 2
         else:
-            current_Node.character.health -= damage
+            char.health -= damage
 
 
 class BackwardsGun(Weapon):
@@ -471,38 +474,58 @@ class Book(Item):
         print(self.read_text)
 
 
+# function instantiation
+
+
 def attack():
     global eacn
-    rn = random.randint(0, 5)  # random number
+    global char
+    rn = random.randint(0, 6)  # random number
     atk = 1  # default damage (with no weapon)
     if weapon is not None:
         atk = weapon.damage
 
     if rn % 2 == 0:
-        current_node.character.health -= atk
-        if current_node.character.health <= 0:
-            print(cyanbold("You killed the %s." % current_node.character.name))
-            if current_node.character.inventory:
-                enemy_drop()
+        char.health -= atk
+        if char.health <= 0:
+            print(cyanbold("You killed the %s." % char.name))
+            if char.inventory: enemy_drop()
             current_node.character = None
             eacn = False
         else:
-            print(cyanbold("You attacked the %s." % current_node.character.name))
-            print((purplebold("%s Health: ") % current_node.character.name)
-                  + str(current_node.character.health))
-            current_node.character.attack()
+            print(cyanbold("You attacked the %s." % char.name))
+            print((purplebold("%s Health: ") % char.name) + str(char.health))
+            char.attack()
     else:
         print(redbold("You missed."))
-        current_node.character.attack()
+        char.attack()
 
 
 def take_all():
     curitm = current_node.items
-    while len(curitm) != 0:
-        for items in curitm:
-            items.take()
-            print(len(curitm))
+    if len(curitm) + len(inventory) > invCapacity:
+        print(redbold("You won't have any space those items."))
+        time.sleep(.5)
+        choice = input("Is there an item you don't want to take?\n>").lower()
 
+        if choice == 'no':
+            print("ok")
+        else:
+            _itm = None
+            for item in inventory:
+                if item.name.lower() in choice:
+                    _itm = item
+
+            while len(curitm) != 1:
+                for itm in curitm:
+                    if itm == _itm:
+                        pass
+                    else:
+                        itm.take()
+    else:
+        while len(curitm) != 0:
+            for itm in curitm:
+                itm.take()
 
 
 def drop_all():
@@ -512,8 +535,8 @@ def drop_all():
 
 
 def enemy_drop():
-    enemy = current_node.character
-    while len(enemy.inventory)!= 0:
+    enemy = char
+    while len(enemy.inventory) != 0:
         for _itm in enemy.inventory:
             current_node.items.append(_itm)
             enemy.inventory.remove(_itm)
@@ -571,113 +594,94 @@ def lookup():
     print(redbold("You died."))
     quit(0)
 
+# characters and items
+cm_desc = "A mask of a smiling man wearing glasses with slits in the eyes. Wonder what you'd use it for."
 
-# Characters and Items
-
-cookie = Food("Cookie", "A chocolate chip cookie. Seems delicious.")
+ckie = Food("Cookie", "A chocolate chip cookie. Seems delicious.")
 bed = Bed("Bed", "Your average-looking bed.")
 ball = Ball("Ball", "A regular, old tennis ball.")
 techRoomKey = Item("Key", "The key has a message engraved that says 'Tech Room Key'...")
 backwardsGun = BackwardsGun("Gun", "It's a gun, but its barrel is pointing the opposite way.")
 water = Drink("Water Bottle", "A water bottle that has an off-center label that says 'Fiji'.")
-cookieMask = Mask("Mask", "A mask of a smiling man wearing glasses with slits in the eyes. Wonder what you'd use it "
-                          "for.")
+cookieMask = Mask("Mask", cm_desc)
 shirt = Wearable("Shirt", "Just a plain white shirt.", 'h')
 weirdBag = Container("Backpack", "Just a regular backpack.", 4)
 sword = Sword("Iron Sword", "A normal iron sword.", 10)
 hammer = Hammer("Heavy Hammer", "A heavy, 2 foot long hammer with an iron head. Seems lethal.")
 silk = Item("Silk", "Authentic spider silk.")
-
-Cookie = Character("Cookiezi", "This person seems to be sitting behind a desk with a computer, mashing his keyboard\n"
-                               "quietly, but you could definitely hear it. On his monitor, he seems to be clicking "
-                               "circles...", None, None, None)
-jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "stop", ['pen'], 50)
-spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", [silk], 10, 3)
-
-
 mechKeyboard = Item("HyperX Alloy FPS Keyboard", "A mechanical keyboard with Cherry MX red switches.")
 drawTablet = Item("Huion Graphics Tablet", "A normal graphics tablet. Seems cheap.")
 
+c_desc = "This person seems to be sitting behind a desk with a computer, mashing his keyboard" \
+         "\nquietly, but you could definitely hear it. On his monitor, he seems to be clicking " \
+         "circles..."
+
+Cookie = Character("Cookiezi", c_desc, None, None, None)
+jeff = Character("jeff", "he's sitting on a chair playing a game on the left side of the room", "stop", [], 50)
+spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", [silk], 10, 3)
 
 # Rooms
+broom_desc = "You are in a bedroom full of anime posters, figures, etc." \
+             "\nYou have a computer sitting on a desk to your north, and a door to the east."
+compute_desc = "On the desk lies a computer with a crappy membrane keyboard and a mouse." \
+               "\nOn the computer lies a weird game called 'osu!'..."
+hal_desc = "The hallway has a few paintings with a dull red carpet on the wooden floor." \
+            "\nThere are stairs leading down to the south, as well as another room across yours."
+eroom_desc = "You enter an empty room, but in the southern-most corner there's a " \
+             "\ntable with what seems to be a drawing tablet, as well as a keyboard."
+t_desc = "On the table there is a key and empty boxes with labels saying" \
+            "\n'HyperX Alloy FPS Mechanical Gaming Keyboard' as well as another\n" \
+            "box that says 'Huion Graphics Tablet'..."
+bth_desc = "The bathroom is set with two sinks, a bathtub and a toilet." \
+           "\nThere are also toiletries sitting on top of the sink pcount."
+droom_desc = "The dining room has a table with a fancy green cloth and a basket" \
+         "\nfull of fake fruit. The kitchen leads east, and the living room to the west."
+k1_desc = "In the kitchen there's a refrigerator and a pantry full of food," \
+          "\nas well as a long pcount to eat food on. There's more stuff farther south."
+k2_desc = "This side of the Kitchen has a flat screen tv mounted to the wall\nwith a smaller table below " \
+          "it that holds the cable box, and an old,\nuseless game console. There's what seems to be a " \
+          "laundry room to the\nwest as well as a slide door leading outside east."
+ldroom_desc = "The Laundry Room has a washing and drying machine, as well as a cabinet."
+cab_desc = "Inside the cabinet contains jackets and sweaters. The shelf above it has a" \
+           "\nfew boxes put for storage, but there's a paper mask of a man's face here..."  # osu! joke
+by1_desc = "The empty backyard had little to no grass, making it look like a desert.\nNot only that, there " \
+           "are two dogs that seem to not care about it at all\nand just have fun with the tennis balls around them."
+by2_desc = "This side of the backyard has an unused grill and a bench lying\nat the wall of the house. " \
+           "And more tennis balls..."
+lroom_desc = "The living room has couches set with a large TV.\nThe exit seems to go the south."
+door_desc = "You stand at the exit of the house, where lies a bunch of shoes.\nThe door faces west, " \
+            "and there's another door to the south."
+prch_desc = "You exit the house into the porch, where there are short, dull, plants.\nYou can go more to " \
+            "the west to exit the porch and into the driveway."
+dwroom_desc = "The drive way has a basketball hoop, but to the west you see a store with a\nsign that says... Walm." \
+              "\nYou can go back north into the porch."
+walm_desc = "Sorry to keep your hopes up, this store is closed."
+troom_desc = "The door you open leads you into room filled with bright looking technology." \
+             "\nThe whole room seems to be white-ish. The whole room seems to be some sort of 'man cave'." \
+             "\nYou feel so intimidated that you shouldn't touch any of the equipment."
 
-BEDROOM = Room("Bedroom",
-               "You are in a bedroom full of anime posters, figures, etc."
-               "\nYou have a computer sitting on a desk to your north, and a door to the east.",
-               "COMPUTER", None, "HALLWAY", None, None, None, None, [bed, shirt, sword])
-COMPUTER = Room("Computer",
-                "On the desk lies a computer with a crappy membrane keyboard and a mouse. "
-                "\nOn the computer lies a weird game called 'osu!'...",
-                None, "BEDROOM", "HALLWAY", None, None, None, None, [weirdBag])
-HALLWAY = Room("Hallway",
-               "The hallway has a few paintings with a dull red carpet on the wooden floor."
-               "\nThere are stairs leading down to the south, as well as another room across yours.",
-               "DINING_ROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DINING_ROOM", spider, [])
-EMPTY_ROOM = Room("Empty Room",
-                  "You enter an empty room, but in the southern-most corner there's a "
-                  "\ntable with what seems to be a drawing tablet, as well as a keyboard.",
-                  "HALLWAY", "TABLE", None, None, None, None, jeff, [backwardsGun])
-TABLE = Room("Table",
-             "On the table there is a key and empty boxes with labels saying "
-             "\n'HyperX Alloy FPS Mechanical Gaming Keyboard' as well as another\n"
-             "box that says 'Huion Graphics Tablet'...",
-             "EMPTY_ROOM", None, None, None, None, None, None, [techRoomKey, mechKeyboard, drawTablet])
-BATHROOM = Room("Bathroom",
-                "The bathroom is set with two sinks, a bathtub and a toilet.\n"
-                "There are also toiletries sitting on top of the sink pcount.",
-                None, None, None, "HALLWAY", None, None, None, [])
-DINING_ROOM = Room("Dining Room",
-                   "The dining room has a table with a fancy green cloth and a basket "
-                   "\nfull of fake fruit. The kitchen leads east, and the living room to the west.",
-                   None, "HALLWAY", "KITCHEN1", "LIVING_ROOM", "HALLWAY", None, None, [cookie])
-KITCHEN1 = Room("Entrance to Kitchen",
-                "In the kitchen there's a refrigerator and a pantry full of "
-                "food,\nas well as a long pcount to eat food on. There's more stuff farther south.",
-                "DINING_ROOM", "KITCHEN2", None, None, None, None, None, [])
-KITCHEN2 = Room("Farther Side of Kitchen",
-                "This side of the Kitchen has a flat screen tv mounted to the wall\nwith a smaller table below "
-                "it that holds the cable box, and an old,\nuseless game console. There's what seems to be a "
-                "laundry room to the\nwest as well as a slide door leading outside east.",
-                "KITCHEN1", None, "BACKYARD1", "LAUNDRY_ROOM", None, None, None, [hammer])
-LAUNDRY_ROOM = Room("Laundry Room",
-                    "The Laundry Room has a washing and drying machine, as well as a cabinet.",
-                    "CABINET", None, "KITCHEN2", None, None, None, None, [water])
-CABINET = Room("Inside of Cabinet",
-               "Inside the cabinet contains jackets and sweaters. The shelf above it has a \n"
-               "few boxes put for storage, but there's a paper mask of a man's face here...",
-               # osu! joke, don't worry about it
-               None, "LAUNDRY_ROOM", "KITCHEN2", None, None, None, None, [cookieMask])
-BACKYARD1 = Room("Backyard",
-                 "The empty backyard had little to no grass, making it look like a desert.\nNot only that, there "
-                 "are two dogs that seem to not care about it at all\nand just have fun with the tennis balls "
-                 "around them.",
-                 "BACKYARD2", None, None, "KITCHEN2", None, None, None, [ball])
-BACKYARD2 = Room("Farther side of the Backyard",
-                 "This side of the backyard has an unused grill and a bench lying\nat the wall of the house. "
-                 "And more tennis balls...", None, "BACKYARD1", None, None, None, None, None, [ball])
-LIVING_ROOM = Room("Living Room",
-                   "The living room has couches set with a large TV.\nThe exit seems to go the south.",
-                   None, "DOOR", "DINING_ROOM", None, None, None, None, [])
-DOOR = Room("Door",
-            "You stand at the exit of the house, where lies a bunch of shoes.\nThe door faces west, "
-            "and there's another door to the south.",
-            "LIVING_ROOM", "LOCKED_DOOR", None, 'PORCH', None, None, None, [])
+
+BEDROOM = Room("Bedroom", broom_desc, "COMPUTER", None, "HALLWAY", None, None, None, None, [bed, shirt, sword])
+COMPUTER = Room("Computer", compute_desc, None, "BEDROOM", "HALLWAY", None, None, None, None, [weirdBag])
+HALLWAY = Room("Hallway", hal_desc, "DININGROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DININGROOM", spider, [])
+EMPTY_ROOM = Room("Empty Room", eroom_desc, "HALLWAY", "TABLE", None, None, None, None, jeff, [backwardsGun])
+TABLE = Room("Table", t_desc, "EMPTY_ROOM", None, None, None, None, None, None, [techRoomKey, mechKeyboard, drawTablet])
+BATHROOM = Room("Bathroom", bth_desc, None, None, None, "HALLWAY", None, None, None, [])
+DININGROOM = Room("Dining Room", droom_desc, None, "HALLWAY", "KITCHEN1", "LIVING_ROOM", "HALLWAY", None, None, [ckie])
+KITCHEN1 = Room("Entrance to Kitchen", k1_desc, "DININGROOM", "KITCHEN2", None, None, None, None, None, [])
+KITCHEN2 = Room("End of Kitchen", k2_desc, "KITCHEN1", None, "BACKYARD1", "LAUNDRY_ROOM", None, None, None, [hammer])
+LAUNDRY_ROOM = Room("Laundry Room", ldroom_desc, "CABINET", None, "KITCHEN2", None, None, None, None, [water])
+CABINET = Room("Inside of Cabinet", cab_desc, None, "LAUNDRY_ROOM", "KITCHEN2", None, None, None, None, [cookieMask])
+BACKYARD1 = Room("Backyard", by1_desc, "BACKYARD2", None, None, "KITCHEN2", None, None, None, [ball])
+BACKYARD2 = Room("Farther side of the Backyard", by2_desc, None, "BACKYARD1", None, None, None, None, None, [ball])
+LIVING_ROOM = Room("Living Room", lroom_desc, None, "DOOR", "DININGROOM", None, None, None, None, [])
+DOOR = Room("Door", door_desc, "LIVING_ROOM", "LOCKED_DOOR", None, 'PORCH', None, None, None, [])
 LOCKED_DOOR = Room("Locked Door", "This room's door is locked.", "DOOR", None, None, None, None, None, None, [])
-PORCH = Room("Porch",
-             "You exit the house into the porch, where there are short, dull, plants.\nYou can go more to "
-             "the west to exit the porch and into the driveway.",
-             None, None, "DOOR", "DRIVEWAY", None, None, None, [])
-DRIVEWAY = Room("Driveway",
-                "The drive way has a basketball hoop, but to the west you see a store with a\nsign that says... Walm."
-                "\nYou can go back north into the porch.", "PORCH", None, None, "STORE", None, None, None, [])
-STORE = Room("Walm", "Sorry to keep your hopes up, this store is closed.",
-             None, None, "DRIVEWAY", None, None, None, None, [])
+PORCH = Room("Porch", prch_desc, None, None, "DOOR", "DRIVEWAY", None, None, None, [])
+DRIVEWAY = Room("Driveway", dwroom_desc, "PORCH", None, None, "STORE", None, None, None, [])
+STORE = Room("Walm", walm_desc, None, None, "DRIVEWAY", None, None, None, None, [])
 
-TECH_ROOM = Room("Tech Room",
-                 "The door you open leads you into room filled with bright looking technology.\n"
-                 "The whole room seems to be white-ish. The whole room seems to be some sort of 'man cave'.\n"
-                 "You feel so intimidated that you shouldn't touch any of the equipment.",
-                 "DOOR", None, None, None, None, None, Cookie, [])
+TECH_ROOM = Room("Tech Room", troom_desc, "DOOR", None, None, None, None, None, Cookie, [])
 
 dir1 = ['north', 'south', 'east', 'west', 'up', 'down']
 dir2 = ['n', 's', 'e', 'w', 'u', 'd']
@@ -686,34 +690,36 @@ current_node = BEDROOM
 curchange = True
 eacn = False  # enemy at current node
 
-time.sleep(.5)
+input("Press enter to play:")
 
 while True:
     line()
+    
+    char = current_node.character
 
     if health == 0:
         print(redbold("you died"))
         break
     print(redbold("Health: "), str(health))
+
     if curchange:
         current_node.print_descriptions()
         curchange = False
-        if current_node.character is not None and current_node.character.isAlive:
-            if isinstance(current_node.character, Enemy):
-                print(redbold("You've walked into %s." % current_node.character.name.lower()))
+        if char is not None and char.isAlive:
+            if isinstance(char, Enemy):
+                print(redbold("You've walked into %s." % char.name.lower()))
                 eacn = True
             else:
-                current_node.character.print_descriptions()
+                char.print_descriptions()
 
-    command = input('>').lower()
+    cmd = input('>').lower()
 
-    if command == 'quit':
+    if cmd == 'quit':
         quit(0)
-    elif command == 'help':
+    elif cmd == 'help':
         print("-> To move, use the cardinal directions.")
         print("-> If you don't know where you are, type 'l' or 'look'.")
-        print("-> For items, use them how you would in real life.")
-    elif 'do it to em' in command:
+    elif 'do it to em' in cmd:
         print("\n", yellowbold(
             "⠀⠀⠀⠀⣠⣦⣤⣀ ⠀⠀⠀⠀⢡⣤⣿⣿ \n"
             "⠀⠀⠀⠀⠠⠜⢾⡟ ⠀⠀⠀⠀⠀⠹⠿⠃⠄ \n"
@@ -735,13 +741,13 @@ while True:
             "⠀⠉⠉⠁⠀⠀⠀⠀⢸⣿⣿⠁ \n"
             "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈\n"
         ))
-    elif command.strip() == 'look up':
+    elif cmd.strip() == 'look up':
         lookup()
-    elif 'check' in command or 'look at' in command:
+    elif 'check' in cmd or 'look at' in cmd:
         if not inventory and weapon is None:
             print(ntii)
         else:
-            if command.strip() == 'check' or command.strip() == 'look at':
+            if cmd.strip() == 'check' or cmd.strip() == 'look at':
                 check_cmd = input("What do you want to check?\n>").lower()
                 itm = None
                 for item in inventory:
@@ -757,14 +763,14 @@ while True:
             else:
                 itm = None
                 for item in inventory:
-                    if item.name.lower() in command:
+                    if item.name.lower() in cmd:
                         itm = item
 
                 if itm is None:
                     print(nii)
                 else:
                     itm.print_descriptions()
-    elif 'inv' in command or 'inventory' in command:
+    elif 'inv' in cmd or 'inventory' in cmd:
         if not inventory:
             print(ntii)
         else:
@@ -779,7 +785,7 @@ while True:
             else:
                 print(purplebold("Capacity: "), str(invCapacity), "(", greenbold("+" + str(bp.capacity)), ")")
             print("You have %s spaces left." % (invCapacity - len(inventory)))
-    elif 'armor' in command:
+    elif 'armor' in cmd:
         if head is None and chest is None and legs is None and feet is None:
             print(redbold("You're wearing nothing."))
         else:
@@ -797,54 +803,54 @@ while True:
                 print("\tWeapon: " + bold(weapon.name.lower()))
             if bp is not None:
                 print("\tBackpack: " + bold(bp.name.lower()) + " +" + bp.capacity)
-    elif 'look' in command or command == 'l':
+    elif 'look' in cmd or cmd == 'l':
         current_node.print_descriptions()
-        if current_node.character is None or not current_node.character.isAlive:
+        if char is None or not char.isAlive:
             continue
         else:
-            current_node.character.print_descriptions()
-    elif 'jump' in command:
+            char.print_descriptions()
+    elif 'jump' in cmd:
         current_node.jump()
-    elif 'yeet' in command:
+    elif 'yeet' in cmd:
         print(bold('yeet'))
-    elif command == "oof":
+    elif cmd == "oof":
         current_node.oof()
-    elif command == 'flush':
+    elif cmd == 'flush':
         current_node.flush()
-    elif 'suicide' in command:
+    elif 'suicide' in cmd:
         suicide()
-    elif command == 'beep':
+    elif cmd == 'beep':
         print('boop')
-    elif command == "ping":
+    elif cmd == "ping":
         current_node.ping()
         pcount += 1
-    elif command in dir2:
+    elif cmd in dir2:
         if eacn:
             print(redbold("There's an enemy in the room. You can't leave unless you kill it."))
         else:
-            pos = dir2.index(command)
-            command = dir1[pos]
+            pos = dir2.index(cmd)
+            cmd = dir1[pos]
             try:
-                current_node.move(command)
+                current_node.move(cmd)
                 curchange = True
             except KeyError:
                 print(redbold("You can't go that way."))
                 curchange = False
-    elif command in dir1:
+    elif cmd in dir1:
         if eacn:
             print(redbold("There's an enemy in the room. You can't leave unless you kill it."))
         else:
             try:
-                current_node.move(command.lower())
+                current_node.move(cmd.lower())
                 curchange = True
             except KeyError:
                 print(red("You can't go that way."))
                 curchange = False
-    elif 'wear' in command:
+    elif 'wear' in cmd:
         if not inventory:
             print(ntii)
         else:
-            if command.strip() == 'wear':
+            if cmd.strip() == 'wear':
                 wear_cmd = input("What do you want to wear?\n>").lower().strip()
                 itm = None
                 for item in inventory:
@@ -863,7 +869,7 @@ while True:
             else:
                 itm = None
                 for item in inventory:
-                    if item.name.lower() in command:
+                    if item.name.lower() in cmd:
                         itm = item
 
                 if itm is None:
@@ -873,14 +879,14 @@ while True:
                         itm.equip()
                     else:
                         print(redbold("You can't wear that."))
-    elif 'take off' in command or 'unequip' in command:
+    elif 'take off' in cmd or 'unequip' in cmd:
         if head is None \
                 and chest is None and legs is None \
                 and feet is None and weapon is None \
                 and bp is None:
             print(redbold("You aren't wearing anything."))
         else:
-            if command.strip() == 'take off' or command.strip() == 'unequip':
+            if cmd.strip() == 'take off' or cmd.strip() == 'unequip':
                 unequip_cmd = input("What do you want to take off?\n>").lower()
                 try:
                     if head is not None:
@@ -908,30 +914,30 @@ while True:
             else:
                 try:
                     if head is not None:
-                        if head.name.lower() in command:
+                        if head.name.lower() in cmd:
                             head.unequip()
                     elif chest is not None:
-                        if chest.name.lower() in command:
+                        if chest.name.lower() in cmd:
                             chest.unequip()
                     elif legs is not None:
-                        if legs.name.lower() in command:
+                        if legs.name.lower() in cmd:
                             legs.unequip()
                     elif feet is not None:
-                        if feet.name.lower() in command:
+                        if feet.name.lower() in cmd:
                             feet.unequip()
                     elif weapon is not None:
-                        if weapon.name.lower() in command:
+                        if weapon.name.lower() in cmd:
                             weapon.unequip()
                     elif bp is not None:
-                        if bp.name.lower() in command:
+                        if bp.name.lower() in cmd:
                             bp.unequip()
                 except AttributeError:
                     print(redbold("You aren't wearing that."))
-    elif 'equip' in command:
+    elif 'equip' in cmd:
         if not inventory:
             print(ntii)
         else:
-            if command.strip() == 'equip':
+            if cmd.strip() == 'equip':
                 equip_cmd = input("What do you want to equip?\n>").lower()
                 itm = None
                 for item in inventory:
@@ -951,7 +957,7 @@ while True:
             else:
                 itm = None
                 for item in inventory:
-                    if item.name.lower() in command:
+                    if item.name.lower() in cmd:
                         itm = item
 
                 if itm is None:
@@ -964,22 +970,22 @@ while True:
                         itm.equip()
                     else:
                         print(redbold("You can't equip that."))
-    elif 'take' in command or 'pickup' in command.strip():
+    elif 'take' in cmd or 'pickup' in cmd.strip():
         if not current_node.items:
             print(redbold("There is nothing here to take."))
         else:
-            if command.strip() == 'take' or command.strip() == 'pickup':
+            if cmd.strip() == 'take' or cmd.strip() == 'pickup':
                 take_cmd = input("What do you want to take?\n>").lower().strip()
                 itm = None
                 for item in current_node.items:
                     if item.name.lower() in take_cmd:
                         itm = item
 
-                if 'all' in take_command:
-                    if len(current_node.items) <= invCapacity:
-                        take_all()
-                    else:
-                        print(redbold("You don't have any more space."))
+                if 'all' in take_cmd:
+                    # if len(current_node.items) <= invCapacity:
+                    take_all()
+                    # else:
+                    #     print(redbold("You don't have any more space."))
                 elif 'nothing' in take_cmd or 'nevermind' in take_cmd or 'nvm' in take_cmd:
                     print("ok")
                 elif itm is None:
@@ -989,30 +995,30 @@ while True:
             else:
                 itm = None
                 for item in current_node.items:
-                    if item.name.lower() in command:
+                    if item.name.lower() in cmd:
                         itm = item
 
-                if 'all' in command:
-                    if len(current_node.items) <= invCapacity:
-                        take_all()
-                    else:
-                        print(redbold("You don't have any more space."))
+                if 'all' in cmd:
+                    # if len(current_node.items) <= invCapacity:
+                    take_all()
+                    # else:
+                    #     print(redbold("You don't have any more space."))
                 elif itm is None:
                     print(nii)
                 else:
                     itm.take()
-    elif 'drop' in command:
+    elif 'drop' in cmd:
         if not inventory:
             print(ntii)
         else:
-            if command.strip() == 'drop':
+            if cmd.strip() == 'drop':
                 drop_cmd = input("What do you want to drop?\n>").lower()
                 itm = None
                 for item in inventory:
                     if item.name.lower() in drop_cmd:
                         itm = item
                 
-                if 'all' in command:
+                if 'all' in cmd:
                     drop_all()
                 elif 'nothing' in drop_cmd or 'nevermind' in drop_cmd or 'nvm' in drop_cmd:
                     print("ok")
@@ -1023,20 +1029,20 @@ while True:
             else:
                 itm = None
                 for item in inventory:
-                    if item.name.lower() in command:
+                    if item.name.lower() in cmd:
                         itm = item
                 
-                if 'all' in command:
+                if 'all' in cmd:
                     drop_all()
                 elif itm is None:
                     print(nii)
                 else:
                     itm.drop()
-    elif 'throw' in command:
+    elif 'throw' in cmd:
         if not inventory:
             print(ntii)
         else:
-            if command.strip() == 'throw':
+            if cmd.strip() == 'throw':
                 throw_cmd = input("What do you want to throw?\n>").lower()
                 itm = None
                 for item in inventory:
@@ -1057,25 +1063,25 @@ while True:
             else:
                 itm = None
                 for item in inventory:
-                    if item.name.lower() in command:
+                    if item.name.lower() in cmd:
                         itm = item
                         
-                if 'all' in command:
+                if 'all' in cmd:
                     drop_all()
                 else:
                     if isinstance(itm, Ball):
                         itm.throw()
                     else:
                         itm.drop()         
-    elif 'talk' in command:
-        if current_node.character is None or not current_node.character.isAlive:
+    elif 'talk' in cmd:
+        if char is None or not char.isAlive:
             print(redbold("There is no one here."))
         else:
-            if command == 'talk':
+            if cmd == 'talk':
                 talk_cmd = input("Who do you want to talk to?\n>").lower().strip()
-                if talk_cmd == current_node.character.name.lower():
-                    if current_node.character.isAlive:
-                        current_node.character.talk()
+                if talk_cmd == char.name.lower():
+                    if char.isAlive:
+                        char.talk()
                     else:
                         print(redbold("That person is dead."))
                 elif 'no one' in talk_cmd or 'nevermind' in talk_cmd or 'nvm' in talk_cmd:
@@ -1083,14 +1089,14 @@ while True:
                 else:
                     print(redbold("That person isn't here."))
             else:
-                if current_node.character.name.lower() in command:
-                    if current_node.character.isAlive:
-                        current_node.character.talk()
+                if char.name.lower() in cmd:
+                    if char.isAlive:
+                        char.talk()
                     else:
                         print(redbold("That person is dead."))
                 else:
                     print(redbold("That person isn't here."))
-    elif 'open door' in command:
+    elif 'open door' in cmd:
         if current_node == LOCKED_DOOR:
             if techRoomKey in inventory:
                 current_node = TECH_ROOM
@@ -1100,11 +1106,11 @@ while True:
                 print(redbold("You don't have a key."))
         else:
             print(redbold("There is no locked door to open."))
-    elif 'drink' in command:
+    elif 'drink' in cmd:
         if not inventory:
             print(ntii)
         else:
-            if command == 'drink':
+            if cmd == 'drink':
                 drink_cmd = input("What do you want to drink?\n>").lower().strip()
                 itm = None
                 for item in inventory:
@@ -1123,7 +1129,7 @@ while True:
             else:
                 itm = None
                 for item in inventory:
-                    if item.name.lower() in command:
+                    if item.name.lower() in cmd:
                         itm = item
 
                 if itm is None:
@@ -1133,50 +1139,50 @@ while True:
                         itm.drink()
                     else:
                         print(redbold("You can't drink that."))
-    elif 'play' in command:
-        if 'computer' in command or 'osu' in command:
+    elif 'play' in cmd:
+        if 'computer' in cmd or 'osu' in cmd:
             current_node.play()
-        elif 'myself' in command:
+        elif 'myself' in cmd:
             print('are you ok?')
         else:
-            if command == 'play':
-                play_command = input("What do you want to play?\n>").lower().strip()
-                if play_command == 'computer' or play_command == 'osu':
+            if cmd == 'play':
+                play_cmd = input("What do you want to play?\n>").lower().strip()
+                if play_cmd == 'computer' or play_cmd == 'osu':
                     current_node.play()
-                elif play_command == 'myself':
+                elif play_cmd == 'myself':
                     print('are you ok?')
-                elif 'nothing' in take_command or 'nevermind' in take_command or 'nvm' in take_command:
+                elif 'nothing' in take_cmd or 'nevermind' in take_cmd or 'nvm' in take_cmd:
                     print("ok")
             else:
                 print(nii)
-    elif 'kill' in command:
-        if command == 'kill':
-            kill_command = input("Who do you want to kill?\n>").lower()
-            if kill_command == 'me' or kill_command == 'self':
+    elif 'kill' in cmd:
+        if cmd == 'kill':
+            kill_cmd = input("Who do you want to kill?\n>").lower()
+            if kill_cmd == 'me' or kill_cmd == 'self':
                 suicide()
-            elif kill_command == current_node.character.name.lower():
-                if isinstance(current_node.character, Enemy):
-                    print(redbold("This character is an enemy. You must use the attack command to kill it."))
+            elif kill_cmd == char.name.lower():
+                if isinstance(char, Enemy):
+                    print(redbold("This character is an enemy. You must use the attack cmd to kill it."))
                 else:
-                    if current_node.character.isAlive:
-                        current_node.character.kill()
+                    if char.isAlive:
+                        char.kill()
                     else:
                         print(redbold("That person is dead."))
             else:
                 print(redbold("That person isn't here."))
-        elif current_node.character is None:
+        elif char is None:
             print(redbold("There is no one here."))
-        elif current_node.character.name.lower() in command:
-            if isinstance(current_node.character, Enemy):
-                print(redbold("This character is an enemy. You must use the attack command to kill it."))
+        elif char.name.lower() in cmd:
+            if isinstance(char, Enemy):
+                print(redbold("This character is an enemy. You must use the attack cmd to kill it."))
             else:
-                if current_node.character.isAlive:
-                    current_node.character.kill()
+                if char.isAlive:
+                    char.kill()
                 else:
                     print(redbold("That person is dead."))
         else:
             print(redbold("That person isn't here."))
-    elif 'stats' in command:
+    elif 'stats' in cmd:
         if weapon is None and bp is None:
             print(redbold("You don't have a weapon or a backpack."))
         else:
@@ -1184,41 +1190,41 @@ while True:
                 weapon.stats()
             if bp is not None:
                 bp.stats()
-    elif 'attack' in command:
-        if command.strip() == 'attack':
-            atk_command = input("Who do you want to attack?\n>").lower()
-            if current_node.character is not None:
-                if atk_command == current_node.character.name.lower():
-                    if isinstance(current_node.character, Enemy):
+    elif 'attack' in cmd:
+        if cmd.strip() == 'attack':
+            atk_cmd = input("Who do you want to attack?\n>").lower()
+            if char is not None:
+                if atk_cmd == char.name.lower():
+                    if isinstance(char, Enemy):
                         attack()
-                    elif isinstance(current_node.character, Character):
-                        current_node.character.kill()
+                    elif isinstance(char, Character):
+                        char.kill()
                     else:
                         print(redbold("That person isn't here."))
                 else:
                     print(redbold("That person isn't here."))
-            elif 'no one' in atk_command.strip() or 'nvm' in atk_command.strip() or 'nevermind' in atk_command.strip():
+            elif 'no one' in atk_cmd.strip() or 'nvm' in atk_cmd.strip() or 'nevermind' in atk_cmd.strip():
                 print('ok')
             else:
-                if 'self' in atk_command or 'myself' in atk_command:
+                if 'self' in atk_cmd or 'myself' in atk_cmd:
                     print('are you ok?')
                 else:
                     print(redbold("That person isn't here."))
         else:
-            if current_node.character is None:
-                if 'self' in command or 'myself' in command:
+            if char is None:
+                if 'self' in cmd or 'myself' in cmd:
                     print('are you ok?')
                 else:
                     print(redbold("That person isn't here."))
             else:
-                if current_node.character.name.lower() in command:
-                    if isinstance(current_node.character, Enemy):
+                if char.name.lower() in cmd:
+                    if isinstance(char, Enemy):
                         attack()
-                    elif isinstance(current_node.character, Character):
-                        current_node.character.kill()
+                    elif isinstance(char, Character):
+                        char.kill()
                 else:
                     print(redbold("That person isn't here."))
-    elif 'break door' in command:
+    elif 'break door' in cmd:
         if not inventory:
             print(ntii)
         else:
