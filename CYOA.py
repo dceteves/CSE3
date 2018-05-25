@@ -96,7 +96,7 @@ class Room(object):
         else:
             print("It seems you can take:")
             for items in self.items:
-                if items == mechKeyboard or items == drawTablet:
+                if items == mechKeyboard or items == tablet:
                     print("\t", redbold(items.name))
                 else:
                     print("\t", bold(items.name.lower()))
@@ -127,10 +127,10 @@ class Room(object):
 
     def play(self):
         if current_node == COMPUTER:
-            if head == cookieMask and mechKeyboard in current_node.items and drawTablet in current_node.items:
+            if head == cookieMask and mechKeyboard in current_node.items and tablet in current_node.items:
                 print(yellowbold("You played so hard, you died."))
                 quit(0)
-            elif head == cookieMask or (mechKeyboard in current_node.items and drawTablet in current_node.items):
+            elif head == cookieMask or (mechKeyboard in current_node.items and tablet in current_node.items):
                 print(purplebold("You're so good at this game that the computer exploded"))
                 time.sleep(1)
                 print(purplebold("And it pops back..."))
@@ -203,7 +203,7 @@ class Item(object):
     def take(self):
         if len(inventory) == invCapacity:
             print(redbold("Your inventory is full."))
-        elif self == mechKeyboard or self == drawTablet:
+        elif self == mechKeyboard or self == tablet:
             inventory.append(self)
             current_node.items.pop(current_node.items.index(self))
             print(cyanbold("You take the " + self.name + "."))
@@ -213,7 +213,7 @@ class Item(object):
             print(cyanbold("You take the " + self.name.lower() + "."))
 
     def drop(self):
-        if self == mechKeyboard or self == drawTablet:
+        if self == mechKeyboard or self == tablet:
             inventory.remove(self)
             current_node.items.append(self)
             print(cyanbold("You drop the " + self.name + '.'))
@@ -494,7 +494,8 @@ def attack():
         char.health -= atk
         if char.health <= 0:
             print(cyanbold("You killed the %s." % char.name))
-            if char.inventory: enemy_drop()
+            if char.inventory:
+                enemy_drop()
             current_node.character = None
             eacn = False
         else:
@@ -599,6 +600,7 @@ def lookup():
     print(redbold("You died."))
     quit(0)
 
+
 # characters and items
 cm_desc = "A paper mask of a smiling man wearing glasses with slits in the eyes. Wonder what you'd use it for."
 
@@ -615,12 +617,10 @@ sword = Sword("Iron Sword", "A normal iron sword.", 10)
 hammer = Hammer("Heavy Hammer", "A heavy, 2 foot long hammer with an iron head. Seems lethal.")
 silk = Item("Silk", "Authentic spider silk.")
 mechKeyboard = Item("HyperX Alloy FPS Keyboard", "A mechanical keyboard with Cherry MX red switches.")
-drawTablet = Item("Huion Graphics Tablet", "A normal graphics tablet. Seems cheap.")
+tablet = Item("Huion Graphics Tablet", "A normal graphics tablet. Seems cheap.")
 fang = Item("Snake Fang", "Fangs of a snake.")
 book = Book("Book", "A brown book. Wonder what it says.", greenbold("if you're reading this it's too late"))
 spaghetti = Food("Spaghetti", "Normal, authentic spaghetti.")
-
-
 
 c_desc = "This person seems to be sitting behind a desk with a computer, mashing his keyboard" \
          "\nquietly, but you could definitely hear it. On his monitor, he seems to be clicking " \
@@ -631,7 +631,6 @@ jeff = Character("jeff", "he's sitting on a chair playing a game on the left sid
 spider = Enemy("Spider", "A fairly large spider with a venomous aura coming out of it.", [silk], 10, 3)
 snake = Enemy("Snake", "A long slithering snake.", [fang], 20, 5)
 guard = Enemy("Guard", "He seems to be protecting the stuff on the table.", [book, spaghetti], 30, 10)
-
 
 
 # Rooms
@@ -678,7 +677,7 @@ BEDROOM = Room("Bedroom", broom_desc, "COMPUTER", None, "HALLWAY", None, None, N
 COMPUTER = Room("Computer", compute_desc, None, "BEDROOM", "HALLWAY", None, None, None, None, [weirdBag])
 HALLWAY = Room("Hallway", hal_desc, "DININGROOM", "EMPTY_ROOM", "BATHROOM", "BEDROOM", None, "DININGROOM", spider, [])
 EMPTY_ROOM = Room("Empty Room", eroom_desc, "HALLWAY", "TABLE", None, None, None, None, jeff, [backwardsGun])
-TABLE = Room("Table", t_desc, "EMPTY_ROOM", None, None, None, None, None, guard, [techRoomKey, mechKeyboard, drawTablet])
+TABLE = Room("Table", t_desc, "EMPTY_ROOM", None, None, None, None, None, guard, [techRoomKey, mechKeyboard, tablet])
 BATHROOM = Room("Bathroom", bth_desc, None, None, None, "HALLWAY", None, None, None, [])
 DININGROOM = Room("Dining Room", droom_desc, None, "HALLWAY", "KITCHEN1", "LIVING_ROOM", "HALLWAY", None, None, [ckie])
 KITCHEN1 = Room("Entrance to Kitchen", k1_desc, "DININGROOM", "KITCHEN2", None, None, None, None, None, [])
@@ -790,7 +789,7 @@ while True:
         else:
             print("Your inventory:")
             for item in inventory:
-                if item == mechKeyboard or item == drawTablet:
+                if item == mechKeyboard or item == tablet:
                     print("\t" + purplebold(item.name))
                 else:
                     print("\t" + bold(item.name.lower()))
@@ -1257,7 +1256,6 @@ while True:
                 if item.name.lower() in eat_cmd:
                     itm = item
 
-
             if eat_cmd.strip() == 'nvm' or eat_cmd.strip() == 'nevermind' or eat_cmd.strip() == 'nothing':
                 print('ok')
             elif itm is None:
@@ -1314,8 +1312,3 @@ while True:
                     itm.read()
                 else:
                     print(redbold("You can't read that."))
-
-
-
-
-
